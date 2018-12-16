@@ -1,0 +1,41 @@
+@import url("../assets/roboto/roboto.css");
+
+.container {
+	display: flex;
+	flex-direction: column;
+	position: absolute;
+ 	top: 0;
+ 	bottom: 0;
+ 	left: 0;
+ 	right: 0;
+ 	font-family: 'roboto';
+
+	.mat-toolbar.mat-primary {
+		position: sticky;
+		top: 0;
+	}
+
+	.sidenav-container {
+		height: 100%;
+		flex: 1;
+	}
+
+	.sidenav {
+	  width: 200px;
+	}
+
+ 	&.is-mobile {
+ 		.sidenav-container {
+ 			flex: 1 0 auto;
+ 		}
+
+ 		.toolbar {
+ 			position: fixed;
+ 			z-index: 2;
+ 		}
+ 	}
+
+ 	mat-sidenav-content {
+ 		padding: 20px;
+ 	}
+}

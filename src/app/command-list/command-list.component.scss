@@ -1,0 +1,27 @@
+.command-list-container {
+	.add-command-button {
+		position: fixed;
+		right: 40px;
+		bottom: 40px;
+	}
+
+	.header {
+		h1 {
+			float: left;
+		}
+		height: 5em;
+		.buttons {
+			position: relative;
+			top: 1.5em;
+			display: inline-block;
+			left: 2em;
+			& > * {
+				margin-left: 3px;
+				margin-right: 3px;
+			}
+		}
+	}
+
+	.select-commands {
+	}
+}

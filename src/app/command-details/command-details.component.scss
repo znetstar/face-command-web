@@ -1,0 +1,32 @@
+fieldset {
+	border: none;
+}
+
+
+.runConditionSelect, .runConditionList {
+	width: 345px;
+}
+
+.runConditions {
+	.runCondition {
+		.remove {
+			position: absolute;
+			right: 0;
+		}
+	}
+}
+
+.action-buttons {
+	button {
+		margin: 5px;
+	}
+}
+
+.run-conditions-selected-action-buttons {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.run-conditions {
+	padding-bottom: 0;
+}

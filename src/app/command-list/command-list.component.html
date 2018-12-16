@@ -1,0 +1,20 @@
+<div class="command-list-container">
+	<div class="header">
+		<h1>Commands</h1>
+		<div class="buttons" *ngIf="commands.length > 0">
+			<mat-checkbox [(ngModel)]="selectCommands" class="select-commands">Select Multiple</mat-checkbox>
+			<button *ngIf="selectCommands" (click)="removeCommands()" mat-raised-button>Remove</button>
+		</div>
+	</div>
+	<ng-container *ngIf="!selectCommands">
+		<mat-nav-list class="command-list">
+		   <a mat-list-item routerLink="/commands/{{ command.ID }}" *ngFor="let command of commands">{{ command.Name }}</a>
+		</mat-nav-list>
+	</ng-container>
+	<ng-container *ngIf="selectCommands">
+		<mat-selection-list class="command-list" [(ngModel)]="selectedCommands">
+		   <mat-list-option *ngFor="let command of commands" [value]="command">{{ command.Name }}</mat-list-option>
+		</mat-selection-list>
+	</ng-container>
+	<button class="add-command-button" mat-fab (click)="open_add_command()" aria-label="Command Face"><mat-icon>add</mat-icon></button>
+</div>

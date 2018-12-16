@@ -1,0 +1,11 @@
+<h1>Create Face</h1>
+<div class="clear-row">
+	<button mat-raised-button (click)="clearFace()">Clear</button>
+</div>
+<app-face-details
+	#faceDetails
+	(created)="faceCreated($event)"
+	(updated)="faceUpdated($event)"
+	(removed)="faceRemoved($event)"
+>
+</app-face-details>

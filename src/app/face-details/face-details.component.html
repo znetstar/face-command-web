@@ -1,0 +1,43 @@
+<form class="face-details" #form >
+	<fieldset class="image">
+		<h3>Face Image</h3>
+		<div class="existingImage" *ngIf="imageUrl">
+			<img [src]="imageUrl" />
+			<br/>
+		</div>
+		<ng-container *ngIf="!faceFromCamera">
+			<div class="imageUpload">
+				<div>
+					<input (change)="fileAdded()" #imageFile type="file" name="uploadFace">
+				</div>
+			</div>
+			<br/>
+		</ng-container>
+		<div>
+			<mat-checkbox name="faceFromCamera" [(ngModel)]="faceFromCamera">Retrieve face from capture source (webcam)</mat-checkbox>
+			<br/>
+		</div>
+	</fieldset>
+	<fieldset class="properties">
+		<h3>Face Properties</h3>
+		<mat-form-field class="id">
+			<input matInput placeholder="ID of face" type="number" name="id" disabled="" [(ngModel)]="face.ID">
+		</mat-form-field>
+		<br/>
+		<mat-form-field class="name">
+			<input matInput placeholder="Name of face" required="" name="name" [(ngModel)]="face.Name">
+		</mat-form-field>
+		<div class="property">
+			<mat-checkbox name="autostart" [(ngModel)]="face.Autostart" >Load face on startup</mat-checkbox>
+		</div>
+	</fieldset>
+	<fieldset class="action-buttons">
+		<ng-container *ngIf="faceId">
+			<button mat-raised-button (click)="updateFace(form)">Update</button>
+			<button type="button" mat-raised-button (click)="removeFace()">Remove</button>
+		</ng-container>
+		<ng-container *ngIf="!faceId">
+			<button mat-raised-button (click)="createFace(form)">Create</button>
+		</ng-container>
+	</fieldset>
+</form>

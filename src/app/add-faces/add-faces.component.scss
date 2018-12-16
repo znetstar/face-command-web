@@ -1,0 +1,18 @@
+.add-faces {
+	.faces-input {
+		padding: 16px;
+		width: 125px;
+	}
+	.faces-list {
+		width: 300px;
+		.selected-face {
+			.remove {
+				position: absolute;
+				right: 0;
+			}
+		}
+	}
+	.selection-action-buttons {
+		margin-top: 10px;
+	}
+}

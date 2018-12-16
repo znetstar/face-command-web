@@ -1,0 +1,20 @@
+<div class="faces-list-container">
+	<div class="header">
+		<h1>Faces</h1>
+		<div class="buttons" *ngIf="faces.length > 0">
+			<mat-checkbox [(ngModel)]="selectFaces" class="select-faces">Select Multiple</mat-checkbox>
+			<button *ngIf="selectFaces" (click)="removeFaces()" mat-raised-button>Remove</button>
+		</div>
+	</div>
+	<ng-container *ngIf="!selectFaces">
+		<mat-nav-list class="faces-list">
+		   <a mat-list-item routerLink="/faces/{{ face.ID }}" *ngFor="let face of faces">{{ face.Name }}</a>
+		</mat-nav-list>
+	</ng-container>
+	<ng-container *ngIf="selectFaces">
+		<mat-selection-list class="face-list" [(ngModel)]="selectedFaces">
+		   <mat-list-option *ngFor="let face of faces" [value]="face">{{ face.Name }}</mat-list-option>
+		</mat-selection-list>
+	</ng-container>
+	<button class="add-face-button" mat-fab (click)="open_add_face()" aria-label="Add Face"><mat-icon>add</mat-icon></button>
+</div>

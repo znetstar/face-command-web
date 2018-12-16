@@ -1,0 +1,54 @@
+.detail-container {
+
+	.action-buttons, .properties{
+		min-width: 200px;
+	}
+
+	.properties {
+	}
+
+
+	.action-buttons {
+		button {
+			margin: 5px;
+		}
+	}
+
+	.header {
+		margin-bottom: 10px;
+		& > div {
+			display: inline-block;
+		}
+
+		.face-identifiers {
+			height: auto;
+			display: inline-block;
+			position: absolute;
+			margin: 10px;
+			width: auto;
+			.face-identifier {
+				width: auto;
+				margin-right: 1em;
+				display: inline-block;
+
+				.key {
+					font-weight: bold;
+				}
+
+				h1.value {
+					font-size: 1em;
+					font-weight: normal;
+					margin: 0;
+				}
+
+				.value {
+					
+				}
+			}
+		}
+	}
+
+ 	.face-property-table {
+
+ 	}
+}

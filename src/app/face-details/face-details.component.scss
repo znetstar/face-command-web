@@ -1,0 +1,25 @@
+.face-details {
+	fieldset {
+		border: none;
+	}
+	.action-buttons, .properties{
+		min-width: 200px;
+	}
+
+	.properties {
+	}
+
+
+	.action-buttons {
+		button {
+			margin: 5px;
+		}
+	}
+
+	.existingImage {
+		img {
+			max-height: 100px;
+			max-width: 100px;
+		}
+	}
+}

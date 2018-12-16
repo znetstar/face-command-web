@@ -1,0 +1,5 @@
+<h1>Add Command</h1>
+<div class="clear-row">
+	<button mat-raised-button (click)="clearCommand()">Clear</button>
+</div>
+<app-command-details #command (created)="created($event)" (updated)="updated($event)" (removed)="removed($event)"></app-command-details>

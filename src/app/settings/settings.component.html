@@ -1,0 +1,91 @@
+<div class="settings-container" *ngIf="config">
+	<h1>Settings</h1>
+	<p>
+		Most settings require a restart to take effect
+	</p>
+	<form class="settings">
+		<fieldset>
+			<h2>Images</h2>
+			<mat-form-field class="imageHeight">
+				<input matInput type="number" min="0" placeholder="Image height (px)" name="ImageHeight" [(ngModel)]="config.ImageHeight">
+			</mat-form-field>
+			<br/>
+			<mat-form-field class="imageWidth">
+				<input matInput type="number" min="0" placeholder="Image width (px)" name="ImageWidth" [(ngModel)]="config.ImageWidth">
+			</mat-form-field>
+		</fieldset>
+		<fieldset>
+			<h2>Detection</h2>
+			<div>
+				<mat-checkbox [(ngModel)]="config.AutostartDetection" name="AutostartDetection">Start detection on startup</mat-checkbox>
+			</div>
+			<br/>
+			<mat-form-field class="frequency">
+				<input matInput type="number" min="1" placeholder="Image capture frequency (ms)" name="ImageCaptureFrequency" [(ngModel)]="config.ImageCaptureFrequency">
+			</mat-form-field>
+			<br/>
+			<mat-form-field class="cascade">
+				<input matInput type="text" placeholder="Face Cascade file" name="FaceCascade" [(ngModel)]="config.FaceCascade">
+			</mat-form-field>
+			<br/>
+			<mat-form-field class="eigenFaceRecognizerComponents">
+				<input matInput type="number" placeholder="Eigen Face Recognizer Components" name="eigenFaceRecognizerComponents" [(ngModel)]="config.EigenFaceRecognizerComponents">
+			</mat-form-field>
+			<br/>
+			<mat-form-field class="eigenFaceRecognizerThreshold">
+				<input matInput type="number" placeholder="Eigen Face Recognizer Threshold" name="eigenFaceRecognizerThreshold" [(ngModel)]="config.EigenFaceRecognizerThreshold">
+			</mat-form-field>
+		</fieldset>
+		<fieldset>
+			<h2>Database</h2>
+			<mat-form-field class="dbpath">
+				<input matInput placeholder="Path to database file" name="DatabasePath" [(ngModel)]="config.DatabasePath">
+			</mat-form-field>
+		</fieldset>
+		<fieldset>
+			<h2>RPC</h2>
+			<mat-form-field class="host">
+				<input matInput placeholder="IP Address Server binds to" name="Host" [(ngModel)]="config.Host">
+			</mat-form-field>
+			<br/>
+			<mat-form-field class="port">
+				<input type="number" min="1024" max="65535" matInput placeholder="Port Server binds to" name="Port" [(ngModel)]="config.Port">
+			</mat-form-field>
+			<br/>
+			<mat-form-field class="apibasepath">
+				<input type="text" matInput placeholder="Path of the API on the Server" name="apibasepath" [(ngModel)]="config.APIBasePath">
+			</mat-form-field>
+		</fieldset>
+		<fieldset>
+			<h2>Logging</h2>
+			<mat-form-field class="loglevel">
+				<input matInput type="number" max="6" min="0" placeholder="Log Level" name="LogLevel" [(ngModel)]="config.LogLevel">
+			</mat-form-field>
+			<br/>
+			<div>
+				<mat-checkbox [(ngModel)]="config.LogToConsole" name="Log to Console">Log To Console</mat-checkbox>
+			</div>
+			<br/>
+			<mat-form-field class="logfile">
+				<input type="text" matInput placeholder="Log to File" name="LogToFile" [(ngModel)]="config.LogToFile">
+			</mat-form-field>
+		</fieldset>
+		<fieldset>
+			<h2>Interface</h2>
+			<div>
+				<small>Web depends on RPC</small>
+			</div>
+			<br/>
+			<div>
+				<mat-checkbox [(ngModel)]="config.WebInterface" name="Web">Enable Web Interface</mat-checkbox>
+			</div>
+			<br/>
+			<div>
+				<mat-checkbox [(ngModel)]="config.RPCInterface" name="RPC">Enable RPC Interface</mat-checkbox>
+			</div>
+		</fieldset>
+		<fieldset>
+			<button (click)="updateSettings()" mat-raised-button>Update Settings</button>
+		</fieldset>
+	</form>
+</div>
