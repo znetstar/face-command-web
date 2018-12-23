@@ -17,6 +17,7 @@ import { MatToolbarModule,
           MatCheckboxModule,
           MatInputModule
        } from '@angular/material';
+import {NgxAutoScrollModule} from "ngx-auto-scroll";
 import { FaceListComponent } from './face-list/face-list.component';
 import { FaceListItemComponent } from './face-list-item/face-list-item.component';
 import { SettingsComponent } from './settings/settings.component';
@@ -30,6 +31,8 @@ import { CommandListComponent } from './command-list/command-list.component';
 import { CommandDetailsComponent } from './command-details/command-details.component';
 import { AddCommandComponent } from './add-command/add-command.component';
 import { CommandListItemComponent } from './command-list-item/command-list-item.component';
+import { LogsComponent } from './logs/logs.component';
+import { FaceCommandClientService } from './face-command-client.service';
 
 @NgModule({
   declarations: [
@@ -44,7 +47,8 @@ import { CommandListItemComponent } from './command-list-item/command-list-item.
     CommandListComponent,
     CommandDetailsComponent,
     AddCommandComponent,
-    CommandListItemComponent
+    CommandListItemComponent,
+    LogsComponent
   ],
   imports: [
     BrowserModule,
@@ -63,9 +67,10 @@ import { CommandListItemComponent } from './command-list-item/command-list-item.
     MatOptionModule,
     MatSelectModule,
     MatCheckboxModule,
-    MatInputModule
+    MatInputModule,
+    NgxAutoScrollModule
   ],
-  providers: [{provide: ErrorHandler, useClass: AppErrorHandler }],
+  providers: [{provide: ErrorHandler, useClass: AppErrorHandler }, FaceCommandClientService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

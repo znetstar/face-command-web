@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { EventEmitter2 } from 'eventemitter2';
 import { MatSnackBar } from '@angular/material';
-import { AppResources, CommandService, DetectionService, FaceManagementService, ConfigService } from "face-command-client";
+import { AppResources, CommandService, DetectionService, FaceManagementService, ConfigService, LogsService } from "face-command-client";
 import { AppErrorHandler } from './app-error-handler';
 import { Face } from 'face-command-common';
 
@@ -14,15 +14,18 @@ export class FaceCommandClientService extends EventEmitter2 {
   public commandService: CommandService;
   public detectionService: DetectionService;
   public faceManagementService: FaceManagementService;
-  public configService: ConfigService
+  public configService: ConfigService;
+  public logsService: LogsService;
 
   constructor(private errors: AppErrorHandler, private snackbar: MatSnackBar) {
     super();
-    this.resources = new AppResources(`${(location.protocol === 'https:') ? 'wss' : 'ws'}://${document.location.host}/rpc`);
+    // this.resources = new AppResources(`${(location.protocol === 'https:') ? 'wss' : 'ws'}://${document.location.host}/rpc`);
+    this.resources = new AppResources(`${(location.protocol === 'https:') ? 'wss' : 'ws'}://127.0.0.1:7732/rpc`);
     this.commandService = new CommandService(this.resources);
     this.detectionService = new DetectionService(this.resources);
     this.faceManagementService = new FaceManagementService(this.resources);
     this.configService = new ConfigService(this.resources);
+    this.logsService = new LogsService(this.resources);
   }
 
   public static async faceImageAsDataUri(face: Face): Promise<string> {

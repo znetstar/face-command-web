@@ -8,6 +8,7 @@ import { AddFaceComponent } from './add-face/add-face.component';
 import { CommandListComponent } from './command-list/command-list.component';
 import { CommandListItemComponent } from './command-list-item/command-list-item.component';
 import { AddCommandComponent } from './add-command/add-command.component';
+import { LogsComponent } from "./logs/logs.component";
 
 const routes: Routes = [
 	{ path: 'faces', component: FaceListComponent },
@@ -19,6 +20,7 @@ const routes: Routes = [
 	{ path: 'commands', component: CommandListComponent },
 	{ path: 'add-command', component: AddCommandComponent },
 	{ path: 'commands/:id', component: CommandListItemComponent },
+	{ path: 'logs', component: LogsComponent }
 ];
 
 @NgModule({

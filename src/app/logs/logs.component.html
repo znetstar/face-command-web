@@ -1,0 +1,6 @@
+ <div class="logs-container">
+  <h1>Logs</h1>
+  <ul class="log-entries" #entriesView ngx-auto-scroll>
+    <li *ngFor="let entry of entries | slice:entries.length - 100" class="entry">[<time>{{entry.date.toLocaleString()}}</time> - <span class="level">{{entry.level}}</span>]: <span class="message">{{entry.message}}</span></li>
+  </ul>
+</div>
