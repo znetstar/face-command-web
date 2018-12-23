@@ -14,7 +14,7 @@ export class AppComponent {
     .pipe(
       map(result => result.matches)
   );
-  title = 'Face Defense';
+  title = 'Face Command';
 
   constructor(private breakpointObserver: BreakpointObserver) {
   

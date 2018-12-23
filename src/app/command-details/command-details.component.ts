@@ -1,107 +1,106 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { FaceDefenseClientService } from '../face-defense-client.service';
-import { AppErrorHandler } from '../app-error-handler';
+import { MatSnackBar } from '@angular/material';
+import { FaceCommandClientService } from '../face-command-client.service';
+import { Command } from 'face-command-common';
 
 
 @Component({
   selector: 'app-command-details',
   templateUrl: './command-details.component.html',
   styleUrls: ['./command-details.component.scss'],
-  providers: [ FaceDefenseClientService ]
+  providers: [ FaceCommandClientService ]
 })
 
 export class CommandDetailsComponent implements OnInit {
   public command: any = {  };
-  public commandTypes: any;
+  public commandTypes: string[];
   public runConditionTypes: any[];
   public selectedRunCondition: any;
   public runConditionsEnum: any;
   public runConditionsSelected: any = [];
 
-  get commandId() { return this.command.ID; }
+  get commandId(): number { return this.command.id; }
   @Input()
-  set commandId(value) { this.command.ID = value; }
+  set commandId(value: number) { this.command.id = value; }
 
   get firstSelectedCommand() {
   	return this.runConditionsSelected[0];
   }
 
   get facesToRecognizeOpen() {
-  	return (this.runConditionsSelected.length === 1) && [2,5].some((n) => n === this.runConditionsSelected[0].RunConditionType);
+  	return (this.runConditionsSelected.length === 1) && [2,5].some((n) => n === this.runConditionsSelected[0].runConditionType);
   }
 
   ftrChange(ftr) {
-  	this.firstSelectedCommand.FacesToRecognize = ftr;
+  	this.firstSelectedCommand.facesToRecognize = ftr;
   }
 
   runConditionSelected($event) {
-  	let con = $event.value;
-  	this.command.RunConditions = (this.command.RunConditions || []).concat({
-  		FacesToRecognize: [],
-  		RunConditionType: con.value
+  	const con = $event.value;
+  	this.command.runConditions = (this.command.runConditions || []).concat({
+  		facesToRecognize: [],
+  		runConditionType: con.value
   	});
-  	this.runConditionTypes.splice(this.runConditionTypes.indexOf(con), 1)[0];
+  	this.runConditionTypes.splice(this.runConditionTypes.indexOf(con), 1);
 	  $event.source.value = null;
   }
 
   removeRunConditionsSelected() {
-    for (var runCondition of this.runConditionsSelected) {
-        this.command.RunConditions.splice(this.command.RunConditions.indexOf(runCondition), 1)[0];
-    	this.runConditionTypes.push({ value: runCondition.RunConditionType, label: this.runConditionsEnum[runCondition.RunConditionType] });
+    for (const runCondition of this.runConditionsSelected) {
+        this.command.runConditions.splice(this.command.runConditions.indexOf(runCondition), 1)[0];
+    	this.runConditionTypes.push({ value: runCondition.runConditionType, label: this.runConditionsEnum[runCondition.runConditionType] });
     }
     this.runConditionsSelected = [];
   }
 
   getDataAndRunConditions() {
-    let RunConditions = this.command.RunConditions.map((r) => {
-  		let FacesToRecognize = (r.FacesToRecognize && (r.FacesToRecognize.length > 0 ? (r.FacesToRecognize.map((f) => f.ID)) : null)) || null;
-  		return { RunConditionType: r.RunConditionType, FacesToRecognize };
+    const runConditions = this.command.runConditions.map((r) => {
+      const { runConditionType, id } = r;
+  		const facesToRecognize = (r.facesToRecognize && (r.facesToRecognize.length > 0 ? (r.facesToRecognize.map((f) => f.id)) : null)) || null;
+  		return { runConditionType, id, facesToRecognize };
   	});	
-  	let Data = this.command.Data ? JSON.parse(this.command.Data) : null;
+  	const data = this.command.data ? JSON.parse(this.command.data) : null;
 
-  	return { RunConditions, Data };
+  	return { runConditions, data };
   }
 
-  createCommand(form) {
-  	if (!form.checkValidity() || !this.command.RunConditions.length) 
-  		return;
-
-  	let { Data, RunConditions } = this.getDataAndRunConditions();
-  	
-  	this.client.invoke('StoreCommand', this.command.Type, Data, RunConditions, this.command.Name)
-  	.then((id) => {
-  		this.commandId = id;
-  		this.created.emit(this.command);
-  	}).catch((err) => this.errors.handleError(err));
+  _updateCommand(command: Command) {
+	  this.command = command;
+	  this.created.emit(this.command);
   }
 
-  updateCommand(form) {
-  	if (!form.checkValidity() || !this.command.RunConditions.length) 
+  async createCommand(form) {
+  	if (!form.checkValidity() || !this.command.runConditions.length) 
   		return;
 
-    let { Data, RunConditions } = this.getDataAndRunConditions();
-    let { ID, Name, Type } = this.command;
-    let cmd = {
-    	Data,
-    	RunConditions,
-    	ID,
-    	Name, 
-      Type
+  	let { data, runConditions } = this.getDataAndRunConditions();
+	  
+	const command = await this.client.commandService.AddCommand(this.command.type, runConditions, this.command.name, data);
+	this._updateCommand(command);
+  }
+
+  async updateCommand(form) {
+  	if (!form.checkValidity() || !this.command.runConditions.length) 
+  		return;
+
+    const { data, runConditions } = this.getDataAndRunConditions();
+    const { id, name, type } = this.command;
+    const command = {
+    	data,
+    	runConditions,
+    	id,
+    	name, 
+        type
     };
 
-    this.client.invoke('UpdateCommand', cmd)
-   	.then(() => {
-   		this.updated.emit(null);
-   	})
-   	.catch((err) => this.errors.handleError(err));
+	  const updatedCommand =  await this.client.commandService.UpdateCommand(command);
+    this._updateCommand(updatedCommand);
+    this.snackbar.open('Command updated', 'Dismiss', { duration: 2000 });
   }
 
-  removeCommand() {
-  	this.client.invoke('RemoveCommand', this.command.ID)
-  	.then(() => {
-  		this.removed.emit(null);
-  	})
-   	.catch((err) => this.errors.handleError(err));  	
+  async removeCommand() {
+    await this.client.commandService.RemoveCommand(this.commandId);
+    this.removed.emit(null);	
   }
 
   @Output()
@@ -113,7 +112,7 @@ export class CommandDetailsComponent implements OnInit {
   @Output()
   public removed = new EventEmitter();
 
-  constructor(private client: FaceDefenseClientService, private errors: AppErrorHandler) {
+  constructor(private client: FaceCommandClientService, private snackbar: MatSnackBar) {
   	this.runConditionsEnum = {
 		0: 'Run when a face is detected',
 		1: 'Run when any face is recognized',
@@ -124,31 +123,18 @@ export class CommandDetailsComponent implements OnInit {
 		6: 'Run when faces are no longer detected'
 	};
   }
-  public isNewCommand: boolean;
-  ngOnInit() {
-  	this.runConditionTypes = Object.keys(this.runConditionsEnum).map((i) => ({ value: Number(i), label: this.runConditionsEnum[i] }))
-  	this.client.invoke('GetAvailableCommandTypes').then((types) => {
-  		this.commandTypes = types;
-  	}).catch((error) => this.errors.handleError(error));
-  	if (this.commandId) {
-  		this.client.invoke('GetCommand', this.commandId).then((command: any) => {
-  			command.RunConditions.forEach((r, index) => {
-  				let conditionType = this.runConditionTypes.filter((f) => f.value === r.RunConditionType)[0];
-  				this.runConditionTypes.splice(this.runConditionTypes.indexOf(conditionType), 1);
-
-  				if (r.FacesToRecognize) {
-	  				Promise.all(r.FacesToRecognize.map((face_id) => this.client.invoke('GetFace', face_id))).then((faces) => {
-	  					this.command.RunConditions[index].FacesToRecognize = faces;
-	  				}).catch((err) => { this.errors.handleError(err); });
-	  				command.RunConditions[index].FacesToRecognize = [];
-	  			}
-  			});
-
-  			this.command = command;
-  		}).catch((err) => { this.errors.handleError(err); });
-  	} else {
-  		this.isNewCommand = true;
-  	}
+  public isNewCommand: boolean = false;
+  async ngOnInit() {
+    this.commandTypes = await this.client.commandService.GetCommandTypeNames();
+    if (this.commandId) {
+      this.command = await this.client.commandService.GetCommand(this.commandId);
+    } else {
+      this.isNewCommand = true;
+    }
+    this.runConditionTypes = Object.keys(this.runConditionsEnum)
+      .map((i) => ({ value: +i, label: this.runConditionsEnum[i] }))
+      .filter((listedCondition) => {  
+        return !(this.command && (<Command>this.command).runConditions.some((condition) => condition.runConditionType === listedCondition.value));
+      });
   }
-
 }

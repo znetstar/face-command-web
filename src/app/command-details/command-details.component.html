@@ -1,29 +1,29 @@
 <form class="command-details" #form >
 	<fieldset>
 		<mat-form-field>
-			<input matInput name="id" type="number" disabled="" placeholder="ID of command" [(ngModel)]="command.ID" />
+			<input matInput name="id" type="number" disabled="" placeholder="ID of command" [(ngModel)]="command.id" />
 		</mat-form-field>
 		<br/>
 		<mat-form-field>
-			<input matInput name="name" placeholder="Name of command" required="" [(ngModel)]="command.Name" />
+			<input matInput name="name" placeholder="Name of command" required="" [(ngModel)]="command.name" />
 		</mat-form-field>
 	</fieldset>
 	<fieldset>
 		<mat-form-field>
-			<mat-select placeholder="Command Type" name="type" required="" [(ngModel)]="command.Type">
+			<mat-select placeholder="Command Type" name="type" required="" [(ngModel)]="command.type">
 				<mat-option *ngFor="let commandType of commandTypes" [value]="commandType">{{commandType}}</mat-option>
 			</mat-select>
 		</mat-form-field>
 		<br/>
 		<mat-form-field>
-			<textarea matInput name="data" placeholder="JSON data" [(ngModel)]="command.Data" ></textarea>
+			<textarea matInput name="data" placeholder="JSON data" [(ngModel)]="command.data" ></textarea>
 		</mat-form-field>
 	</fieldset>
 	<fieldset class="run-conditions">
 		<div>Command Run Conditions</div>
 		<div>
 			<mat-selection-list class="runConditionList" [(ngModel)]="runConditionsSelected" name="runConditions">
-					<mat-list-option *ngFor="let condition of command.RunConditions" [value]="condition">{{runConditionsEnum[condition.RunConditionType]}}</mat-list-option>
+					<mat-list-option *ngFor="let condition of command.runConditions" [value]="condition">{{runConditionsEnum[condition.runConditionType]}}</mat-list-option>
 			</mat-selection-list>
 		</div>
 		<div class="run-conditions-selected-action-buttons" *ngIf="runConditionsSelected.length">
@@ -31,7 +31,7 @@
 		</div>
 		<div class="faces-to-recognize" *ngIf="facesToRecognizeOpen">
 			<div>Faces to Recognize</div>
-			<app-add-faces (changed)="ftrChange($event)" [selectedFaces]="firstSelectedCommand.FacesToRecognize"></app-add-faces>
+			<app-add-faces (changed)="ftrChange($event)" [selectedFaces]="firstSelectedCommand.facesToRecognize"></app-add-faces>
 		</div>
 		<div>
 			<mat-form-field>

@@ -1,70 +1,67 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
-import { FaceDefenseClientService } from '../face-defense-client.service';
+import { FaceCommandClientService } from '../face-command-client.service';
 import { AddFacesComponent } from '../add-faces/add-faces.component';
 import { AppErrorHandler } from '../app-error-handler';
+import { DetectionOptions, EigenFaceRecognizerOptions, Status } from 'face-command-common';
 
 @Component({
   selector: 'app-control',
   templateUrl: './detection.component.html',
   styleUrls: ['./detection.component.scss'],
-  providers: [ FaceDefenseClientService ]
+  providers: [ FaceCommandClientService ]
 })
 export class DetectionComponent implements OnInit {
+  constructor(private client: FaceCommandClientService, public snackbar: MatSnackBar, private errors: AppErrorHandler) { 
 
-  constructor(private client: FaceDefenseClientService, public snackbar: MatSnackBar, private errors: AppErrorHandler) { 
-  	this.detectionOptions = {
-  		Faces: []
-  	};
   }
 
   public autostartFaces: boolean = true;
-  public isDetectionRunning: any = null;
-  public detectionOptions: any = {};
-  public selectedFaces: any = [];
-  public statusChanges: any = [];
+  public isDetectionRunning: boolean;
+  public detectionOptions: DetectionOptions = <any>{ faces: [] };
+  public get selectedFaces() { return this.detectionOptions.faces; }
+  public statusChanges: Status[] = [];
   public facesRecognizeEnum: Object = {
     0: "No faces have been detected",
     1:  "Faces have been detected",
     2: "Faces have been recognized",
     3: "Faces are still being detected are no longer being recognized",
     4: "Faces are no longer being detected"
-
   };
 
   autostartChange($event) {
   	if ($event.checked) {
-  		this.selectedFaces = [];
-  	}
-
+      this.selectedFaces.splice(0, this.selectedFaces.length);
+    }
+    
   	this.autostartFaces = $event.checked;
   }
 
-  stopDetection() {
-  	this.client.invoke("StopDetection").then(() => {
-  		this.isDetectionRunning = false;
-  		this.snackbar.open("Detection stopped", "Dismiss", { duration: 2000 });
-  	})
-    .catch((err) => { this.errors.handleError(err); });
-  }
-
-  startDetection() {
+  async stopDetection() {
+    await this.client.detectionService.StopDetection();
     this.statusChanges = [];
-  	this.detectionOptions.Faces = this.selectedFaces.map((f) => f.ID);
-  	this.client.invoke("StartDetection", this.detectionOptions, this.autostartFaces).then(() => {
-  		this.isDetectionRunning = true;
-  		this.snackbar.open('Detection started', 'Dismiss', { duration: 2000 });
-  	})
-    .catch((err) => { this.errors.handleError(err); });
   }
 
-  ngOnInit() {
-  	this.client.invoke("IsDetectionRunning").then((isDetectionRunning) => this.isDetectionRunning = isDetectionRunning).catch((err) => { this.errors.handleError(err); });
-  	this.client.invoke("GetConfigValue", "ImageCaptureFrequency").then((val) => this.detectionOptions.Frequency = val).catch((err) => { this.errors.handleError(err); });
-    this.client.invoke("PollForStatusChanges").then(() => {
-      this.client.on("UpdateStatusChange", (statusChange) => {
-        this.statusChanges.unshift(statusChange);
-      });
+  async startDetection() {
+    this.statusChanges = [];
+    await this.client.detectionService.StartDetection(this.detectionOptions);
+  }
+
+  async ngOnInit() {
+    this.isDetectionRunning = await this.client.detectionService.IsDetectionRunning();
+    const recOptions = new EigenFaceRecognizerOptions((await this.client.configService.GetConfigValue("eigenFaceRecognizerOptions:components")), (await this.client.configService.GetConfigValue("eigenFaceRecognizerOptions:threshold")));
+    this.detectionOptions = new DetectionOptions((await this.client.configService.GetConfigValue("imageCaptureFrequency")), recOptions);
+    this.client.detectionService.on("StatusChange", (status: Status) => {
+      this.statusChanges.unshift(status);
+    });
+
+    this.client.detectionService.on("DetectionRunning", (running: boolean) => {
+      if (running) {
+        this.snackbar.open('Detection started', 'Dismiss', { duration: 2000 });
+      } else {
+        this.snackbar.open('Detection stopped', 'Dismiss', { duration: 2000 });
+      }
+      this.isDetectionRunning = running;
     });
   }
 

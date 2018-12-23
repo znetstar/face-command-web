@@ -1,52 +1,37 @@
+import { Face } from "face-command-common";
 import { Component, OnInit } from '@angular/core';
-import { FaceDefenseClientService } from '../face-defense-client.service';
 import { Router } from '@angular/router';
-import { AppErrorHandler } from '../app-error-handler';
 import { MatSnackBar } from '@angular/material';
+import { FaceCommandClientService } from '../face-command-client.service';
 
 @Component({
   selector: 'app-face-list',
   templateUrl: './face-list.component.html',
   styleUrls: ['./face-list.component.scss'],
-  providers: [ FaceDefenseClientService ]
+  providers: [ FaceCommandClientService ]
 })
 export class FaceListComponent implements OnInit {
-  public selectedFaces: any = [];
+  public selectedFaces: Face[] = [];
   public selectFaces: boolean = false;
-  constructor(private client: FaceDefenseClientService, private router: Router, private errors: AppErrorHandler, private snackbar: MatSnackBar) { }
+  constructor(private client: FaceCommandClientService, private router: Router, private snackbar: MatSnackBar) { }
 
-  public faces: any = [];
+  public faces: Face[] = [];
 
-  removeFaces() {
-    Promise.all(
-      this.selectedFaces
-      .map((face) => {
-        return new Promise((resolve, reject) => {
-          this.client.invoke("RemoveFace", face.ID)
-            .then(() => {
-              this.faces.splice(this.faces.indexOf(face), 1);
-              resolve();
-            })
-            .catch(reject);
-        });
-      })
-    )
-    .then(() => {
-      this.snackbar.open('Faces removed', 'Dismiss', { duration: 2000 });
-      this.selectFaces = null;
-      this.selectedFaces = [];
-    })
-    .catch((err) => this.errors.handleError(err));
+  public async removeFaces(): Promise<void> {
+    for (const face of this.selectedFaces) {
+      await this.client.faceManagementService.RemoveFace(face.id);
+    }
+    
+    this.snackbar.open('Faces removed', 'Dismiss', { duration: 2000 });
+    this.selectFaces = null;
+    this.selectedFaces = this.faces = [];
   } 
 
-  open_add_face() {
+  openAddFace() {
   	this.router.navigateByUrl("/add-face");
   }
 
-  ngOnInit() {
-  	this.client.invoke('GetFaces').then((faces) => {
-  		this.faces = faces;
-  	}).catch((err) => { this.errors.handleError(err); });
+  async ngOnInit() {
+    this.faces = await this.client.faceManagementService.GetFaces();
   }
-
 }

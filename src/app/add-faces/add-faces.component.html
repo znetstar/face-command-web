@@ -2,7 +2,7 @@
 	<div class="faces-list">
 		<mat-selection-list [(ngModel)]="selectedFacesSelected">
 		  <mat-list-option class="selected-face" *ngFor="let face of selectedFaces" [value]="face">
-		  	<div class="name">{{face.Name}}</div>
+		  	<div class="name">{{face.name}}</div>
 		  </mat-list-option>
 		</mat-selection-list>
 	</div>
@@ -11,7 +11,7 @@
 	</div>
 	<div class="faces-input">
 		<mat-select (selectionChange)="selectFace($event)" placeholder="Select face">
-			<mat-option *ngFor="let face of allFaces" [value]="face">{{face.Name}}</mat-option>
+			<mat-option *ngFor="let face of allFaces" [value]="face">{{face.name}}</mat-option>
 		</mat-select>
 	</div>
 </div>

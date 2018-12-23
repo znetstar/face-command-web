@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FaceDefenseClientService } from '../face-defense-client.service';
+import { FaceCommandClientService } from '../face-command-client.service';
 import { MatButton, MatSnackBar } from '@angular/material';
 import { FormGroup } from '@angular/forms';
 
@@ -7,35 +7,42 @@ import { FormGroup } from '@angular/forms';
   selector: 'app-settings',
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.scss'],
-  providers: [ FaceDefenseClientService ]
+  providers: [ FaceCommandClientService ]
 })
 export class SettingsComponent implements OnInit {
   public config: any;
-  constructor(private client: FaceDefenseClientService, public snackbar: MatSnackBar) { }
-	private dataSource: Array<any>;
-	private originalConfig;
+  constructor(private client: FaceCommandClientService, public snackbar: MatSnackBar) { }
 
-	updateSettings() {
-		var promises = Object.keys(this.config).map((key) => {
-			var value = this.config[key];
-			var promise = null;
-			if (value !== this.originalConfig[key]) {
-				promise = this.client.invoke("SetConfigValue", key, value);
-			}
-			this.originalConfig[key] = value;
-			return promise;
-		}).filter(Boolean);
-		var alldone = Promise.all(promises);
-		alldone.then(() => {
-			this.snackbar.open("Settings updated", "Dismiss", { duration: 2000 });
-		});
-		return alldone;
+	public logLevels: any[] = [
+		"error",
+		"warn",
+		"info",
+		"verbose",
+		"debug",
+		"silly"
+	];
+
+
+	async updateSettings() {
+		await this.client.configService.SetConfig(this.config);
+		await this.client.configService.SaveConfig();
+
+		this.snackbar.open("Settings updated", "Dismiss", { duration: 2000 });
 	}
-  ngOnInit() {
-  	this.client.invoke('GetConfig').then((result) => {
-  		this.originalConfig = JSON.parse(JSON.stringify(result));
-  		this.config = result;
-  	});
+
+	public httpChange($event) {
+		if (!$event.checked) {
+			this.config.webInterface = false;
+		}
+	}
+
+
+	async loadSettings() {
+		this.config = await this.client.configService.GetConfig();
+	}
+
+  async ngOnInit() {
+		await this.loadSettings();
   }
 
 }

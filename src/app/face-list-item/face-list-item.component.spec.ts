@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FaceDetailComponent } from './face-detail.component';
+import { FaceListItemComponent } from './face-list-item.component';
 
 describe('FaceDetailComponent', () => {
-  let component: FaceDetailComponent;
-  let fixture: ComponentFixture<FaceDetailComponent>;
+  let component: FaceListItemComponent;
+  let fixture: ComponentFixture<FaceListItemComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FaceDetailComponent ]
+      declarations: [ FaceListItemComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(FaceDetailComponent);
+    fixture = TestBed.createComponent(FaceListItemComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

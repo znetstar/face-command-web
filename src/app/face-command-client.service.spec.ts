@@ -1,15 +1,15 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { FaceDefenseClientService } from './face-defense-client.service';
+import { FaceCommandClientService } from './face-command-client.service';
 
 describe('FaceDefenseClientService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [FaceDefenseClientService]
+      providers: [FaceCommandClientService]
     });
   });
 
-  it('should be created', inject([FaceDefenseClientService], (service: FaceDefenseClientService) => {
+  it('should be created', inject([FaceCommandClientService], (service: FaceCommandClientService) => {
     expect(service).toBeTruthy();
   }));
 });

@@ -1,20 +1,21 @@
 import { Component, OnInit, EventEmitter, Output, Input, ViewChild  } from '@angular/core';
-import { FaceDefenseClientService } from '../face-defense-client.service';
-import { AppErrorHandler } from '../app-error-handler';
+import { Face } from "face-command-common";
+import { FaceCommandClientService } from '../face-command-client.service';
 
 @Component({
   selector: 'app-add-faces',
   templateUrl: './add-faces.component.html',
   styleUrls: ['./add-faces.component.scss'],
-  providers: [ FaceDefenseClientService ]
+  providers: [ FaceCommandClientService ]
 })
 export class AddFacesComponent implements OnInit {
 
-  constructor(private client: FaceDefenseClientService, private errors: AppErrorHandler) { }
-  private originalAllFaces: any;
-  public allFaces: any;
-  public selectedFacesSelected: any = [];
-  @Input() selectedFaces: any = [];
+  constructor(private client: FaceCommandClientService) { }
+  private originalAllFaces: Face[] = [];
+  public allFaces: Face[] = [];
+  public selectedFacesSelected: Face[] = [];
+
+  @Input() selectedFaces: Face[] = [];
 
   @Output() added = new EventEmitter();
   @Output() removed = new EventEmitter();
@@ -26,10 +27,7 @@ export class AddFacesComponent implements OnInit {
   }
 
   selectFace($event) {
-  	for (var faceIndex in this.allFaces) {
-  		var face = this.allFaces.splice(this.allFaces.indexOf($event.value), 1)[0];
-  		break;
-  	}
+    const face = this.allFaces.splice(this.allFaces.indexOf($event.value), 1)[0];
   	this.selectedFaces.push(face);
   	this.added.emit(face);
     this.changed.emit(this.selectedFaces);
@@ -37,7 +35,7 @@ export class AddFacesComponent implements OnInit {
   }
 
   removeFace() {
-    for (var face of this.selectedFacesSelected) {
+    for (const face of this.selectedFacesSelected) {
       this.selectedFaces.splice(this.selectedFaces.indexOf(face), 1)[0];
     	this.allFaces.push(face);
     	this.removed.emit(face);
@@ -46,12 +44,11 @@ export class AddFacesComponent implements OnInit {
     this.selectedFacesSelected = [];
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.selectedFaces = this.selectedFaces || [];
-  	this.client.invoke("GetFaces").then((faces) => {
-  		this.originalAllFaces = faces;
-  		this.allFaces = this.originalAllFaces.slice(0).filter((f) => (!this.selectedFaces.some((i) => f.ID === i.ID)));
-  	}).catch((err) => { this.errors.handleError(err); });
-  }
 
+    const faces = await this.client.faceManagementService.GetFaces();
+    this.originalAllFaces = faces;
+    this.allFaces = this.originalAllFaces.slice(0).filter((f) => (!this.selectedFaces.some((i) => f.id === i.id)));
+  }
 }

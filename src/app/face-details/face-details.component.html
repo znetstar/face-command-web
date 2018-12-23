@@ -21,14 +21,14 @@
 	<fieldset class="properties">
 		<h3>Face Properties</h3>
 		<mat-form-field class="id">
-			<input matInput placeholder="ID of face" type="number" name="id" disabled="" [(ngModel)]="face.ID">
+			<input matInput placeholder="ID of face" type="number" name="id" disabled="" [(ngModel)]="face.id">
 		</mat-form-field>
 		<br/>
 		<mat-form-field class="name">
-			<input matInput placeholder="Name of face" required="" name="name" [(ngModel)]="face.Name">
+			<input matInput placeholder="Name of face" required="" name="name" [(ngModel)]="face.name">
 		</mat-form-field>
 		<div class="property">
-			<mat-checkbox name="autostart" [(ngModel)]="face.Autostart" >Load face on startup</mat-checkbox>
+			<mat-checkbox name="autostart" [(ngModel)]="face.autostart" >Load face on startup</mat-checkbox>
 		</div>
 	</fieldset>
 	<fieldset class="action-buttons">

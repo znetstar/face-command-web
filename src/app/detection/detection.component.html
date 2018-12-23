@@ -4,7 +4,7 @@
 		<p>Detection is running</p>
 		<button mat-raised-button (click)="stopDetection()">Stop Detection</button>
 		<mat-list role="list">
-			<mat-list-item *ngFor="let status of statusChanges | slice:0:20" role="listitem">{{ status.StatusAsString }}</mat-list-item>
+			<mat-list-item *ngFor="let status of statusChanges | slice:0:20" role="listitem">{{ status.toString() }}</mat-list-item>
 		</mat-list>
 	</div>
 	<div class="pane" *ngIf="isDetectionRunning === false">
@@ -12,7 +12,7 @@
 		<form class="start-detection">
 			<h2>Detection Options</h2>
 			<mat-form-field class="frequency">
-				<input matInput type="number" placeholder="Image capture frequency (ms)" min="1" name="Name" [(ngModel)]="detectionOptions.Frequency">
+				<input matInput type="number" placeholder="Image capture frequency (ms)" min="1" name="Name" [(ngModel)]="detectionOptions.frequency">
 			</mat-form-field>
 			<br/>
 			<div>
@@ -20,7 +20,7 @@
 			</div>
 			<div *ngIf="!autostartFaces">
 				<p>Faces to be loaded into detection</p>
-				<app-add-faces #facesToAdd [selectedFaces]="selectedFaces"></app-add-faces>
+				<app-add-faces #facesToAdd [selectedFaces]="detectionOptions.faces"></app-add-faces>
 			</div>
 			<br/>
 			<div>

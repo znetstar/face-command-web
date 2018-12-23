@@ -7,85 +7,88 @@
 		<fieldset>
 			<h2>Images</h2>
 			<mat-form-field class="imageHeight">
-				<input matInput type="number" min="0" placeholder="Image height (px)" name="ImageHeight" [(ngModel)]="config.ImageHeight">
+				<input matInput type="number" min="0" placeholder="Image height (px)" name="ImageHeight" [(ngModel)]="config.imageSize.height">
 			</mat-form-field>
 			<br/>
 			<mat-form-field class="imageWidth">
-				<input matInput type="number" min="0" placeholder="Image width (px)" name="ImageWidth" [(ngModel)]="config.ImageWidth">
+				<input matInput type="number" min="0" placeholder="Image width (px)" name="ImageWidth" [(ngModel)]="config.imageSize.width">
 			</mat-form-field>
 		</fieldset>
 		<fieldset>
 			<h2>Detection</h2>
 			<div>
-				<mat-checkbox [(ngModel)]="config.AutostartDetection" name="AutostartDetection">Start detection on startup</mat-checkbox>
+				<mat-checkbox [(ngModel)]="config.autostartDetection" name="AutostartDetection">Start detection on startup</mat-checkbox>
 			</div>
 			<br/>
 			<mat-form-field class="frequency">
-				<input matInput type="number" min="1" placeholder="Image capture frequency (ms)" name="ImageCaptureFrequency" [(ngModel)]="config.ImageCaptureFrequency">
+				<input matInput type="number" min="1" placeholder="Image capture frequency (ms)" name="ImageCaptureFrequency" [(ngModel)]="config.imageCaptureFrequency">
 			</mat-form-field>
 			<br/>
-			<mat-form-field class="cascade">
+			<!-- <mat-form-field class="cascade">
 				<input matInput type="text" placeholder="Face Cascade file" name="FaceCascade" [(ngModel)]="config.FaceCascade">
 			</mat-form-field>
-			<br/>
+			<br/> -->
 			<mat-form-field class="eigenFaceRecognizerComponents">
-				<input matInput type="number" placeholder="Eigen Face Recognizer Components" name="eigenFaceRecognizerComponents" [(ngModel)]="config.EigenFaceRecognizerComponents">
+				<input matInput type="number" placeholder="Eigen Face Recognizer Components" name="eigenFaceRecognizerComponents" [(ngModel)]="config.eigenFaceRecognizerOptions.components">
 			</mat-form-field>
 			<br/>
 			<mat-form-field class="eigenFaceRecognizerThreshold">
-				<input matInput type="number" placeholder="Eigen Face Recognizer Threshold" name="eigenFaceRecognizerThreshold" [(ngModel)]="config.EigenFaceRecognizerThreshold">
+				<input matInput type="number" placeholder="Eigen Face Recognizer Threshold" name="eigenFaceRecognizerThreshold" [(ngModel)]="config.eigenFaceRecognizerOptions.threshold">
 			</mat-form-field>
 		</fieldset>
 		<fieldset>
 			<h2>Database</h2>
 			<mat-form-field class="dbpath">
-				<input matInput placeholder="Path to database file" name="DatabasePath" [(ngModel)]="config.DatabasePath">
+				<input matInput placeholder="Database connection url" name="DatabaseUrl" [(ngModel)]="config.databaseUrl">
 			</mat-form-field>
 		</fieldset>
 		<fieldset>
 			<h2>RPC</h2>
 			<mat-form-field class="host">
-				<input matInput placeholder="IP Address Server binds to" name="Host" [(ngModel)]="config.Host">
+				<input matInput placeholder="IP Address Server binds to" name="Host" [(ngModel)]="config.host">
 			</mat-form-field>
 			<br/>
 			<mat-form-field class="port">
-				<input type="number" min="1024" max="65535" matInput placeholder="Port Server binds to" name="Port" [(ngModel)]="config.Port">
+				<input type="number" min="1" max="65535" matInput placeholder="Port Server binds to" name="Port" [(ngModel)]="config.port">
 			</mat-form-field>
 			<br/>
 			<mat-form-field class="apibasepath">
-				<input type="text" matInput placeholder="Path of the API on the Server" name="apibasepath" [(ngModel)]="config.APIBasePath">
+				<input type="text" matInput placeholder="Path of the API on the Server" name="apibasepath" [(ngModel)]="config.endpoint">
 			</mat-form-field>
 		</fieldset>
 		<fieldset>
 			<h2>Logging</h2>
+			<div class="quiet">
+				<mat-checkbox [(ngModel)]="config.quiet" name="quiet">Disable Logging</mat-checkbox>
+			</div>			
 			<mat-form-field class="loglevel">
-				<input matInput type="number" max="6" min="0" placeholder="Log Level" name="LogLevel" [(ngModel)]="config.LogLevel">
+				<mat-select class="logLevelSelector" [(ngModel)]="config.logLevel" name="logLevel" [disabled]="config.quiet">
+					<mat-option *ngFor="let level of logLevels" [value]="level">{{level}}</mat-option>
+				</mat-select>
 			</mat-form-field>
 			<br/>
-			<div>
+			<!-- <div>
 				<mat-checkbox [(ngModel)]="config.LogToConsole" name="Log to Console">Log To Console</mat-checkbox>
 			</div>
-			<br/>
-			<mat-form-field class="logfile">
+			<br/> -->
+			<!-- <mat-form-field class="logfile">
 				<input type="text" matInput placeholder="Log to File" name="LogToFile" [(ngModel)]="config.LogToFile">
-			</mat-form-field>
+			</mat-form-field> -->
 		</fieldset>
 		<fieldset>
 			<h2>Interface</h2>
+			<br/>
 			<div>
-				<small>Web depends on RPC</small>
+				<mat-checkbox [(ngModel)]="config.webInterface" name="Web">Enable Web Interface</mat-checkbox>
 			</div>
 			<br/>
 			<div>
-				<mat-checkbox [(ngModel)]="config.WebInterface" name="Web">Enable Web Interface</mat-checkbox>
-			</div>
-			<br/>
-			<div>
-				<mat-checkbox [(ngModel)]="config.RPCInterface" name="RPC">Enable RPC Interface</mat-checkbox>
+				<mat-checkbox (change)="httpChange($event)" [(ngModel)]="config.httpServer" name="HTTP">Enable HTTP Server</mat-checkbox>
 			</div>
 		</fieldset>
-		<fieldset>
-			<button (click)="updateSettings()" mat-raised-button>Update Settings</button>
+		<fieldset class="actions"> 
+			<button (click)="updateSettings()" mat-raised-button>Apply</button>
+			<button (click)="loadSettings()" mat-raised-button>Reset</button>
 		</fieldset>
 	</form>
 </div>
