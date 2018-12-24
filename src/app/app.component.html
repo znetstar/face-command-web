@@ -1,7 +1,7 @@
 <div class="container">
   <mat-toolbar color="primary" class="toolbar">
     <button mat-icon-button (click)="drawer.toggle()"><mat-icon>menu</mat-icon></button>
-    <h1 class="app-name">{{title}}</h1>
+    <h1 class="app-name"><a class="home-link" href="/">{{title}}</a></h1>
   </mat-toolbar>
   <mat-sidenav-container class="sidenav-container">
     <mat-sidenav
@@ -11,7 +11,7 @@
       [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
       [mode]="(isHandset$ | async) ? 'over' : 'side'"
       [opened]="!(isHandset$ | async)">
-      <mat-toolbar color="primary">{{ title }}</mat-toolbar>
+      <mat-toolbar color="primary"><a class="home-link" href="/">{{title}}</a></mat-toolbar>
       <mat-nav-list>
         <a routerLink="/detection" mat-list-item>Detection</a>
         <a routerLink="/faces" mat-list-item>Faces</a>

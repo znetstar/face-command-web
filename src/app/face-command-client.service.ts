@@ -19,7 +19,7 @@ export class FaceCommandClientService extends EventEmitter2 {
 
   constructor(private errors: AppErrorHandler, private snackbar: MatSnackBar) {
     super();
-    this.resources = new AppResources(`${(location.protocol === 'https:') ? 'wss' : 'ws'}://${document.location.host}/rpc`);
+    this.resources = new AppResources(window.localStorage["rpcUrl"] || `${(location.protocol === 'https:') ? 'wss' : 'ws'}://${document.location.host}/rpc`);
     this.commandService = new CommandService(this.resources);
     this.detectionService = new DetectionService(this.resources);
     this.faceManagementService = new FaceManagementService(this.resources);

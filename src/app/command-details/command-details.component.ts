@@ -134,7 +134,7 @@ export class CommandDetailsComponent implements OnInit {
     this.runConditionTypes = Object.keys(this.runConditionsEnum)
       .map((i) => ({ value: +i, label: this.runConditionsEnum[i] }))
       .filter((listedCondition) => {  
-        return !(this.command && (<Command>this.command).runConditions.some((condition) => condition.runConditionType === listedCondition.value));
+        return !(this.command && this.command.id && (<Command>this.command).runConditions.some((condition) => condition.runConditionType === listedCondition.value));
       });
   }
 }

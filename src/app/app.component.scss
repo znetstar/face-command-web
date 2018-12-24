@@ -39,3 +39,12 @@
  		padding: 0px 20px;
  	}
 }
+
+
+.home-link {
+	&:visited, &:link {
+		text-decoration: inherit;
+		color: inherit;
+		cursor: pointer;
+	}
+}
