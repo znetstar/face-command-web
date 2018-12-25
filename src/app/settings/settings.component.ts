@@ -23,7 +23,27 @@ export class SettingsComponent implements OnInit {
 	];
 
 
+	public rpcUrl: string = this.client.rpcUrl;
+	public logErrors: boolean = Boolean(localStorage["logErrors"]);
+
+	public resetRPCUrl() {
+		this.rpcUrl = FaceCommandClientService.defaultRPCUrl;
+	}
+
 	async updateSettings() {
+		if (this.rpcUrl !== this.client.rpcUrl) {
+			localStorage["rpcUrl"] = this.rpcUrl;
+			this.client.rpcUrl = this.rpcUrl;
+			await this.client.connect();
+		}
+
+		if (this.logErrors !== Boolean(localStorage["logErrors"])) {
+			if (this.logErrors)
+				localStorage["logErrors"] = 1;
+			else
+				localStorage.removeItem("logErrors");
+		}
+
 		await this.client.configService.SetConfig(this.config);
 		await this.client.configService.SaveConfig();
 

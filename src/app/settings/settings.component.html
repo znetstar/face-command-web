@@ -5,6 +5,20 @@
 	</p>
 	<form class="settings">
 		<fieldset>
+			<h2>RPC Client</h2>
+			<div>
+				<mat-form-field class="rpcUrl">
+					<input matInput type="text" placeholder="WebSocket URL to RPC Server" name="RPCUrl" [(ngModel)]="rpcUrl">
+				</mat-form-field>
+				<br/>
+				<button (click)="resetRPCUrl()" mat-raised-button>Default RPC URL</button>
+			</div>
+			<br/>
+			<div>
+				<mat-checkbox [(ngModel)]="logErrors" name="LogErrors">Write client-side errors to the console</mat-checkbox>
+			</div>
+		</fieldset>
+		<fieldset>
 			<h2>Images</h2>
 			<mat-form-field class="imageHeight">
 				<input matInput type="number" min="0" placeholder="Image height (px)" name="ImageHeight" [(ngModel)]="config.imageSize.height">

@@ -33,6 +33,7 @@
     "eventemitter2": "^5.0.1",
     "face-command-client": "^1.0.0",
     "face-command-common": "^1.0.0",
+    "multi-rpc-browser": "^1.2.1",
     "ngx-auto-scroll": "^1.1.0",
     "rxjs": "^6.0.0",
     "zone.js": "~0.8.26"

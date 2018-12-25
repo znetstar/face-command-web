@@ -4,6 +4,7 @@ import { MatSnackBar } from '@angular/material';
 import { AppResources, CommandService, DetectionService, FaceManagementService, ConfigService, LogsService } from "face-command-client";
 import { AppErrorHandler } from './app-error-handler';
 import { Face } from 'face-command-common';
+import { SettingsComponent } from "./settings/settings.component";
 
 @Injectable({
   providedIn: 'root'
@@ -19,14 +20,22 @@ export class FaceCommandClientService extends EventEmitter2 {
 
   constructor(private errors: AppErrorHandler, private snackbar: MatSnackBar) {
     super();
-    this.resources = new AppResources(window.localStorage["rpcUrl"] || `${(location.protocol === 'https:') ? 'wss' : 'ws'}://${document.location.host}/rpc`);
+
+    this.connect();
+  }
+
+  public static get defaultRPCUrl() { return `${(location.protocol === 'https:') ? 'wss' : 'ws'}://${document.location.host}/rpc`; }
+  
+  public rpcUrl: string = window.localStorage["rpcUrl"] || FaceCommandClientService.defaultRPCUrl;
+
+  public async connect() {
+    this.resources = new AppResources(this.rpcUrl);
     this.commandService = new CommandService(this.resources);
     this.detectionService = new DetectionService(this.resources);
     this.faceManagementService = new FaceManagementService(this.resources);
     this.configService = new ConfigService(this.resources);
     this.logsService = new LogsService(this.resources);
-    this.resources.rpcClient.connect();
-
+    await this.resources.rpcClient.connect();
   }
 
   public static async faceImageAsDataUri(face: Face): Promise<string> {
