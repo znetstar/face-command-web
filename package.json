@@ -2,6 +2,7 @@
   "name": "face-command-web",
   "version": "1.0.0",
   "license": "AGPL-3.0-only",
+  "description": "Angular Web Interface for Face Command",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -16,7 +17,6 @@
     "README.md",
     "CHANNGELOG.md"
   ],
-  "private": true,
   "dependencies": {
     "@angular/animations": "^6.1.3",
     "@angular/cdk": "^6.4.5",
@@ -31,6 +31,8 @@
     "@angular/router": "^6.1.0",
     "core-js": "^2.5.4",
     "eventemitter2": "^5.0.1",
+    "face-command-client": "^1.0.0",
+    "face-command-common": "^1.0.0",
     "ngx-auto-scroll": "^1.1.0",
     "rxjs": "^6.0.0",
     "zone.js": "~0.8.26"
