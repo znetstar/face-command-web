@@ -4,7 +4,6 @@ import { NgModule, ErrorHandler } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import { MaterialComponents } from './material-components';
 import { LayoutModule } from '@angular/cdk/layout';
 import { MatToolbarModule, 
           MatButtonModule,
@@ -15,9 +14,11 @@ import { MatToolbarModule,
           MatOptionModule,
           MatSelectModule,
           MatCheckboxModule,
-          MatInputModule
+          MatInputModule,
+          MatGridListModule,
+          MatSnackBarModule
        } from '@angular/material';
-import {NgxAutoScrollModule} from "ngx-auto-scroll";
+import { NgxAutoScrollModule } from "ngx-auto-scroll";
 import { FaceListComponent } from './face-list/face-list.component';
 import { FaceListItemComponent } from './face-list-item/face-list-item.component';
 import { SettingsComponent } from './settings/settings.component';
@@ -55,9 +56,7 @@ import { FaceCommandClientService } from './face-command-client.service';
     BrowserAnimationsModule,
     AppRoutingModule,
     FormsModule,
-    MaterialComponents,
     LayoutModule,
-    MaterialComponents,
     MatToolbarModule,
     MatButtonModule,
     MatSidenavModule,
@@ -68,9 +67,13 @@ import { FaceCommandClientService } from './face-command-client.service';
     MatSelectModule,
     MatCheckboxModule,
     MatInputModule,
-    NgxAutoScrollModule
+    NgxAutoScrollModule,
+    MatButtonModule, 
+    MatCheckboxModule,
+    MatGridListModule,
+    MatSnackBarModule
   ],
-  providers: [{provide: ErrorHandler, useClass: AppErrorHandler }, FaceCommandClientService],
+  providers: [ {provide: ErrorHandler, useClass: AppErrorHandler }, FaceCommandClientService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

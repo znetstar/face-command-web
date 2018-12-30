@@ -1,6 +1,21 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from "@angular/forms";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import {
+  MatSnackBarModule, 
+  MatFormFieldModule, 
+  MatInputModule, 
+  MatListModule, 
+  MatSelectModule 
+} from "@angular/material";
+import { assert } from "chai";
+import * as Chance from  "chance";
+
+import { Face } from "face-command-common";
+import Random from "face-command-common/lib/Random";
 
 import { CommandDetailsComponent } from './command-details.component';
+import { AddFacesComponent } from "../add-faces/add-faces.component";
 
 describe('CommandDetailsComponent', () => {
   let component: CommandDetailsComponent;
@@ -8,7 +23,19 @@ describe('CommandDetailsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CommandDetailsComponent ]
+      declarations: [ 
+        CommandDetailsComponent, 
+        AddFacesComponent 
+      ],
+      imports: [
+        FormsModule,
+        BrowserAnimationsModule,
+        MatSnackBarModule,
+        MatInputModule,
+        MatFormFieldModule,
+        MatListModule,
+        MatSelectModule
+      ]
     })
     .compileComponents();
   }));
@@ -19,7 +46,9 @@ describe('CommandDetailsComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  describe("#constructor()", () => {
+    it("should create", () => {
+      assert.ok(component);
+    });
   });
 });

@@ -7,11 +7,11 @@
 		</mat-selection-list>
 	</div>
 	<div class="selection-action-buttons" *ngIf="selectedFacesSelected.length">
-		<button mat-raised-button (click)="removeFace()">Remove Faces</button>
+		<button mat-raised-button (click)="removeFaces()">Remove Faces</button>
 	</div>
 	<div class="faces-input">
 		<mat-select (selectionChange)="selectFace($event)" placeholder="Select face">
-			<mat-option *ngFor="let face of allFaces" [value]="face">{{face.name}}</mat-option>
+			<mat-option *ngFor="let face of faces" [value]="face">{{face.name}}</mat-option>
 		</mat-select>
 	</div>
 </div>

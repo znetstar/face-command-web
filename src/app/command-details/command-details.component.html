@@ -31,7 +31,7 @@
 		</div>
 		<div class="faces-to-recognize" *ngIf="facesToRecognizeOpen">
 			<div>Faces to Recognize</div>
-			<app-add-faces (changed)="ftrChange($event)" [selectedFaces]="firstSelectedCommand.facesToRecognize"></app-add-faces>
+			<app-add-faces (changed)="ftrChange($event)" [selectedFaces]="firstSelectedRunCondition.facesToRecognize"></app-add-faces>
 		</div>
 		<div>
 			<mat-form-field>
