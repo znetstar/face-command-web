@@ -22,11 +22,11 @@ export class CommandListComponent implements OnInit {
   }
 
   async removeCommands(): Promise<void> {
-	for (const command of this.selectedCommands) {
-		await this.client.commandService.RemoveCommand(command.id);
-	}
+    for (const command of this.selectedCommands) {
+      await this.client.commandService.RemoveCommand(command.id);
+    }
 
-	this.snackbar.open('Commands removed', 'Dismiss', { duration: 2000 });
+	  this.snackbar.open('Commands removed', 'Dismiss', { duration: 2000 });
   } 
 
   async ngOnInit() {

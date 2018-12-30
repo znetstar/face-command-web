@@ -23,7 +23,7 @@
 		<div>Command Run Conditions</div>
 		<div>
 			<mat-selection-list class="runConditionList" [(ngModel)]="runConditionsSelected" name="runConditions">
-					<mat-list-option *ngFor="let condition of command.runConditions" [value]="condition">{{runConditionsEnum[condition.runConditionType]}}</mat-list-option>
+					<mat-list-option *ngFor="let condition of command.runConditions" [value]="condition">{{runConditionsEnum.get(condition.runConditionType)}}</mat-list-option>
 			</mat-selection-list>
 		</div>
 		<div class="run-conditions-selected-action-buttons" *ngIf="runConditionsSelected.length">
@@ -35,8 +35,8 @@
 		</div>
 		<div>
 			<mat-form-field>
-				<mat-select required="" placeholder="Add Run Condition" (selectionChange)="runConditionSelected($event)" class="runConditionSelect">
-					<mat-option *ngFor="let condition of runConditionTypes" [value]="condition">{{condition.label}}</mat-option>
+				<mat-select required="" placeholder="Add Run Condition" (selectionChange)="runConditionSelectionChange($event)" class="runConditionSelect">
+					<mat-option *ngFor="let condition of runConditionTypes" [value]="condition">{{condition[1]}}</mat-option>
 				</mat-select>
 			</mat-form-field>
 		</div>

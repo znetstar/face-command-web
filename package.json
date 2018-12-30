@@ -8,6 +8,7 @@
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test --browsers ChromeDebug",
+    "headless-test": "ng test --no-watch --no-progress --browsers=ChromeHeadlessCI",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },

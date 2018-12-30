@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
-import { Command, RunConditionType } from 'face-command-common';
+import { Command, RunConditionType, RunCondition } from 'face-command-common';
 
 import { FaceCommandClientService } from '../face-command-client.service';
 
@@ -32,20 +32,20 @@ export class CommandDetailsComponent implements OnInit {
   /**
    * The currently selected run condition for editing.
    */
-  public selectedRunCondition: any;
+  public selectedRunCondition: RunCondition;
 
   /**
    * Enum mapping run condition type number to text that will be displayed to the user. 
    */
-  public runConditionsEnum: any = {
-    0: 'Run when a face is detected',
-    1: 'Run when any face is recognized',
-    2: 'Run when specific faces are recognized',
-    3: 'Run when no faces can be detected',
-    4: 'Run when any face is no longer recognized',
-    5: 'Run when specific faces are no longer recognized',
-    6: 'Run when faces are no longer detected'
-  };
+  public runConditionsEnum: Map<RunConditionType, string> = new Map<RunConditionType, string>([
+    [ +RunConditionType.RunOnFaceDetected, "Run when a face is detected" ],
+    [ +RunConditionType.RunOnAnyFaceRecognized, "Run when any face is recognized" ],
+    [ +RunConditionType.RunOnSpecificFacesRecognized, "Run when specific faces are recognized" ],
+    [ +RunConditionType.RunOnNoFacesDetected, "Run when no faces can be detected" ],
+    [ +RunConditionType.RunOnAnyFaceNoLongerRecognized, "Run when any face is no longer recognized" ],
+    [ +RunConditionType.RunOnSpecificFacesNoLongerRecognized, "Run when specific faces are no longer recognized" ],
+    [ +RunConditionType.RunOnFacesNoLongerDetected, "Run when faces are no longer detected" ]
+  ])
 
   /**
    * Run conditions currently selected.
@@ -74,13 +74,13 @@ export class CommandDetailsComponent implements OnInit {
    * Is true if a commad hasn't been sent to or loaded from the server.
    */
   public get isNewCommand(): boolean {
-    return typeof(this.commandId) !== 'undefined';
+    return typeof(this.commandId) === 'undefined';
   }
 
   /**
    * Returns the first run condition selected.
    */
-  get firstSelectedRunCondition() {
+  get firstSelectedRunCondition(): RunCondition {
   	return this.runConditionsSelected[0];
   }
 
@@ -88,7 +88,7 @@ export class CommandDetailsComponent implements OnInit {
    * Determines if the `AddFaces` component should be shown to add faces to `RunCondition.facesToRecognize`.
    */
   get facesToRecognizeOpen() {
-  	return (this.runConditionsSelected.length === 1) && [(+RunConditionType.RunOnSpecificFacesRecognized), (+RunConditionType.RunOnSpecificFacesNoLongerRecognized)].some((n) => n === this.runConditionsSelected[0].runConditionType);
+  	return (this.runConditionsSelected.length === 1) && [(+RunConditionType.RunOnSpecificFacesRecognized), (+RunConditionType.RunOnSpecificFacesNoLongerRecognized)].some((n) => n === this.firstSelectedRunCondition.runConditionType);
   }
 
   constructor(private client: FaceCommandClientService, private snackbar: MatSnackBar) {  
@@ -106,13 +106,13 @@ export class CommandDetailsComponent implements OnInit {
    * Adds the selected run condition type to the list of run conditions of the command, removing the type from the array of types.
    * @param $event 
    */
-  runConditionSelected($event) {
-  	const con = $event.value;
+  runConditionSelectionChange($event) {
+  	const runConditionType = $event.value;
   	this.command.runConditions = (this.command.runConditions || []).concat({
   		facesToRecognize: [],
-  		runConditionType: con.value
+  		runConditionType: runConditionType[0]
   	});
-  	this.runConditionTypes.splice(this.runConditionTypes.indexOf(con), 1);
+  	this.runConditionTypes.splice(this.runConditionTypes.indexOf(runConditionType), 1);
 	  $event.source.value = null;
   }
 
@@ -121,8 +121,8 @@ export class CommandDetailsComponent implements OnInit {
    */
   removeRunConditionsSelected() {
     for (const runCondition of this.runConditionsSelected) {
-        this.command.runConditions.splice(this.command.runConditions.indexOf(runCondition), 1)[0];
-    	this.runConditionTypes.push({ value: runCondition.runConditionType, label: this.runConditionsEnum[runCondition.runConditionType] });
+      this.command.runConditions.splice(this.command.runConditions.indexOf(runCondition), 1)[0];
+    	this.runConditionTypes.push([ runCondition.runConditionType, this.runConditionsEnum.get(runCondition.runConditionType) ]);
     }
     this.runConditionsSelected = [];
   }
@@ -164,6 +164,7 @@ export class CommandDetailsComponent implements OnInit {
 	  
     const command = await this.client.commandService.AddCommand(this.command.type, runConditions, this.command.name, data);
     this._updateCommand(command);
+    this.created.emit(this.command);
   }
 
   /**
@@ -182,12 +183,12 @@ export class CommandDetailsComponent implements OnInit {
     	runConditions,
     	id,
     	name, 
-        type
+      type
     };
 
 	  const updatedCommand =  await this.client.commandService.UpdateCommand(command);
     this._updateCommand(updatedCommand);
-    this.snackbar.open('Command updated', 'Dismiss', { duration: 2000 });
+    this.updated.emit(this.command);
   }
 
   /**
@@ -212,10 +213,10 @@ export class CommandDetailsComponent implements OnInit {
       this.command = await this.client.commandService.GetCommand(this.commandId);
     }
 
-    this.runConditionTypes = Object.keys(this.runConditionsEnum)
-      .map((i) => ({ value: +i, label: this.runConditionsEnum[i] }))
+    this.runConditionTypes = 
+      Array.from(this.runConditionsEnum)
       .filter((listedCondition) => {  
-        return !(this.command && this.command.id && (<Command>this.command).runConditions.some((condition) => condition.runConditionType === listedCondition.value));
+        return !(!this.isNewCommand && (<Command>this.command).runConditions.some((condition) => condition.runConditionType === listedCondition[0]));
       });
   }
 }
