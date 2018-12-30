@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { EventEmitter2 } from 'eventemitter2';
 import { MatSnackBar } from '@angular/material';
+import { arrayBufferToBlob, blobToDataURL } from 'blob-util'
 import { AppResources, CommandService, DetectionService, FaceManagementService, ConfigService, LogsService } from "face-command-client";
 import { AppErrorHandler } from './app-error-handler';
 import { Face } from 'face-command-common';
-import { SettingsComponent } from "./settings/settings.component";
 
 @Injectable({
   providedIn: 'root'
@@ -38,11 +38,9 @@ export class FaceCommandClientService extends EventEmitter2 {
     await this.resources.rpcClient.connect();
   }
 
-  public static async faceImageAsDataUri(face: Face): Promise<string> {
-    return FaceCommandClientService.bufferAsDataUri(face.image, "image/png");
-  }
+  public static get IMAGE_FORMAT() { return "image/png"; } 
 
-  public static async bufferAsDataUri(buffer: Uint8Array, mime: string = "application/octet-stream"): Promise<string> {
-    return `data:${mime};base64,`+btoa(String.fromCharCode.apply(null, buffer));
+  public static async faceImageAsDataUri(face: Face): Promise<string> {
+    return blobToDataURL(arrayBufferToBlob(face.image, FaceCommandClientService.IMAGE_FORMAT))
   }
 }
