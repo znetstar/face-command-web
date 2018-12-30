@@ -16,6 +16,6 @@ getTestBed().initTestEnvironment(
 );
 
 // Then we find all the tests.
-const context = require.context('./app/command-details', true, /\.spec\.ts$/);
+const context = require.context('./app/command-list-item', true, /\.spec\.ts$/);
 // And load the modules.
 context.keys().map(context);
