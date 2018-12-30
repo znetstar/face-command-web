@@ -16,7 +16,7 @@
 			</mat-form-field>
 			<br/>
 			<div>
-				<mat-checkbox name="Autostart" (change)="autostartChange($event)" [checked]="autostartFaces">Load faces flagged for load on autostart</mat-checkbox>
+				<mat-checkbox name="Autostart" [checked]="autostartFaces">Load faces flagged for load on autostart</mat-checkbox>
 			</div>
 			<div *ngIf="!autostartFaces">
 				<p>Faces to be loaded into detection</p>

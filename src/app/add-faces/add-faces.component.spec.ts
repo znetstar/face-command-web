@@ -1,15 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from "@angular/forms";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { MatListModule, MatSelectModule, MatSnackBarModule } from "@angular/material";
+import { 
+  MatListModule, 
+  MatSelectModule, 
+  MatSnackBarModule,
+  MatCheckboxModule,
+  MatInputModule
+} from "@angular/material";
 import { assert } from "chai";
 import * as Chance from  "chance";
-import { Face } from "face-command-common";
 import Random from "face-command-common/lib/Random";
 
 import { AddFacesComponent } from './add-faces.component';
 import { FaceCommandClientService } from "../face-command-client.service";
-import { FaceManagementService } from 'face-command-client';
 
 const chance = new Chance();
 const random = new Random();
@@ -28,7 +32,9 @@ describe('AddFaceComponent', () => {
         BrowserAnimationsModule,
         MatListModule,
         MatSelectModule,
-        MatSnackBarModule
+        MatSnackBarModule,
+        MatCheckboxModule,
+        MatInputModule
       ],
       providers: [ FaceCommandClientService ]
     })
