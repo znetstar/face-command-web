@@ -4,6 +4,9 @@ import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material';
 import { FaceCommandClientService } from '../face-command-client.service';
 
+/**
+ * Component lists faces stored in the database.
+ */
 @Component({
   selector: 'app-face-list',
   templateUrl: './face-list.component.html',
@@ -11,12 +14,26 @@ import { FaceCommandClientService } from '../face-command-client.service';
   providers: [ FaceCommandClientService ]
 })
 export class FaceListComponent implements OnInit {
+  /**
+   * Faces currently selected for deletion.
+   */
   public selectedFaces: Face[] = [];
-  public selectFaces: boolean = false;
-  constructor(private client: FaceCommandClientService, private router: Router, private snackbar: MatSnackBar) { }
 
+  /**
+   * When true the user can select multiple commands for deletion.
+   */
+  public selectFaces: boolean = false;
+
+  /**
+   * Faces from the database.
+   */
   public faces: Face[] = [];
 
+  constructor(private client: FaceCommandClientService, private router: Router, private snackbar: MatSnackBar) { }
+
+  /**
+   * Removes selected faces from the database.
+   */
   public async removeFaces(): Promise<void> {
     for (const face of this.selectedFaces) {
       await this.client.faceManagementService.RemoveFace(face.id);
@@ -27,10 +44,16 @@ export class FaceListComponent implements OnInit {
     this.selectedFaces = this.faces = [];
   } 
 
+  /**
+   * Redirects to the add=face component
+   */
   openAddFace() {
   	this.router.navigateByUrl("/add-face");
   }
 
+  /**
+   * Loads faces from the database.
+   */
   async ngOnInit() {
     this.faces = await this.client.faceManagementService.GetFaces();
   }
