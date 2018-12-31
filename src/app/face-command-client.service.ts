@@ -20,7 +20,6 @@ export class FaceCommandClientService extends EventEmitter2 {
 
   constructor(private errors: AppErrorHandler, private snackbar: MatSnackBar) {
     super();
-
     this.connect();
   }
 

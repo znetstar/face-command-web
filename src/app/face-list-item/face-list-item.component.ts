@@ -13,7 +13,9 @@ import { MatSnackBar } from '@angular/material';
   providers: [ FaceCommandClientService ]
 })
 export class FaceListItemComponent implements OnInit {
-  constructor(private route: ActivatedRoute, private router: Router, public snackBar: MatSnackBar) { }
+  constructor(private route: ActivatedRoute, private router: Router, public snackBar: MatSnackBar) { 
+    
+  }
   
   /**
    * ID of the existing face.

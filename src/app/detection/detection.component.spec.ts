@@ -120,7 +120,7 @@ describe('DetectionComponent', () => {
 
     it("should retrieve the detection options", async () => {
       const recOptions = new EigenFaceRecognizerOptions(chance.floating(), chance.floating());
-      const options = new DetectionOptions(chance.floating(), recOptions, [], chance.bool()); 
+      const options = new DetectionOptions(chance.floating(), recOptions); 
       const config = new Map<string, any>([
         [ "eigenFaceRecognizerOptions:components", options.eigenFaceRecognizerOptions.components ],
         [ "eigenFaceRecognizerOptions:threshold", options.eigenFaceRecognizerOptions.threshold ],
@@ -129,7 +129,6 @@ describe('DetectionComponent', () => {
       (<FaceCommandClientService>(<any>component).client).configService.GetConfigValue = async (key: string) => config.get(key);
       (<FaceCommandClientService>(<any>component).client).detectionService.IsDetectionRunning = async (): Promise<boolean> => chance.bool()
       await component.ngOnInit();
-
       assert.deepEqual(component.detectionOptions, options);
     });
 

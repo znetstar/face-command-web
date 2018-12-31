@@ -14,7 +14,9 @@ import { FaceCommandClientService } from '../face-command-client.service';
   providers: [ FaceCommandClientService ]
 })
 export class FaceDetailsComponent implements OnInit {
-  constructor(private client: FaceCommandClientService, private sanitizer: DomSanitizer) { }
+  constructor(private client: FaceCommandClientService, private sanitizer: DomSanitizer) {
+
+	}
 	
 	/**
 	 * Underlying face object.

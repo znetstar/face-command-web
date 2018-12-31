@@ -29,7 +29,9 @@ export class FaceListComponent implements OnInit {
    */
   public faces: Face[] = [];
 
-  constructor(private client: FaceCommandClientService, private router: Router, private snackbar: MatSnackBar) { }
+  constructor(private client: FaceCommandClientService, private router: Router, private snackbar: MatSnackBar) { 
+
+  }
 
   /**
    * Removes selected faces from the database.
