@@ -3,8 +3,9 @@ import { EventEmitter2 } from 'eventemitter2';
 import { MatSnackBar } from '@angular/material';
 import { arrayBufferToBlob, blobToDataURL } from 'blob-util'
 import { AppResources, CommandService, DetectionService, FaceManagementService, ConfigService, LogsService } from "face-command-client";
-import { AppErrorHandler } from './app-error-handler';
 import { Face } from 'face-command-common';
+import { MsgPackSerializer, WebSocketClientTransport } from "multi-rpc-browser";
+import { AppErrorHandler } from './app-error-handler';
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +29,7 @@ export class FaceCommandClientService extends EventEmitter2 {
   public rpcUrl: string = window.localStorage["rpcUrl"] || FaceCommandClientService.defaultRPCUrl;
 
   public async connect() {
-    this.resources = new AppResources(this.rpcUrl);
+    this.resources = new AppResources(new WebSocketClientTransport(new MsgPackSerializer(), this.rpcUrl));
     this.commandService = new CommandService(this.resources);
     this.detectionService = new DetectionService(this.resources);
     this.faceManagementService = new FaceManagementService(this.resources);
