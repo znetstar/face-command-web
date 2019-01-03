@@ -13,6 +13,9 @@ export class AppErrorHandler {
 
 	handleError(originalError) {
 		let error = originalError.rejection ? originalError.rejection : originalError;
+		
+		if (!error) return;
+
 		let message = error.message;
 		let stack = error.stack;
 		if (error instanceof ServerError && error.data) {
@@ -20,11 +23,12 @@ export class AppErrorHandler {
 			stack = error.data.stack;
 		}
 	
-		if (localStorage['logErrors'])
+		if (stack && localStorage['logErrors'])
 			console.error(stack);
 		
 		this.zone.run(() => {
-			this.snackbar.open(message, "Dismiss", { duration: 2000 });
+			if (message)
+				this.snackbar.open(message, "Dismiss", { duration: 2000 });
 		});
 	}
 }

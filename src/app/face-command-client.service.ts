@@ -4,7 +4,7 @@ import { MatSnackBar } from '@angular/material';
 import { arrayBufferToBlob, blobToDataURL } from 'blob-util'
 import { AppResources, CommandService, DetectionService, FaceManagementService, ConfigService, LogsService } from "face-command-client";
 import { Face } from 'face-command-common';
-import { MsgPackSerializer, WebSocketClientTransport } from "multi-rpc-browser";
+import { MsgPackSerializer, WebSocketClientTransport, Client as RPCClient } from "multi-rpc-browser";
 import { AppErrorHandler } from './app-error-handler';
 
 @Injectable({
@@ -28,13 +28,39 @@ export class FaceCommandClientService extends EventEmitter2 {
   
   public rpcUrl: string = window.localStorage["rpcUrl"] || FaceCommandClientService.defaultRPCUrl;
 
+  protected onTransportDisconnect() {
+    this.errors.handleError(new Error(`Disconnected from the server`));
+
+    this.rpcClient.transport.removeListener('disconnect', this.transportDisconnect);
+  }
+
+  protected transportDisconnect = this.onTransportDisconnect.bind(this);
+
+  public get rpcClient(): RPCClient {
+    return this.resources.rpcClient;
+  }
+
   public async connect() {
-    this.resources = new AppResources(new WebSocketClientTransport(new MsgPackSerializer(), this.rpcUrl));
+    const transport = new WebSocketClientTransport(new MsgPackSerializer(), this.rpcUrl);
+    this.resources = new AppResources(transport);
     this.commandService = new CommandService(this.resources);
     this.detectionService = new DetectionService(this.resources);
     this.faceManagementService = new FaceManagementService(this.resources);
     this.configService = new ConfigService(this.resources);
     this.logsService = new LogsService(this.resources);
+    transport.on("error", (error) => {
+      this.errors.handleError(error);
+    });
+
+    transport.on("disconnect", this.transportDisconnect);
+    transport.on("connect", () => {
+      transport.on("disconnect", this.transportDisconnect);
+    });
+
+    transport.on("reconnected", () => {
+      this.snackbar.open("Connection re-established", "Dismiss", { duration: 2000 });
+    });
+
     await this.resources.rpcClient.connect();
   }
 
