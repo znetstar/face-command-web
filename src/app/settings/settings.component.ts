@@ -28,7 +28,8 @@ export class SettingsComponent implements OnInit {
 		"info",
 		"verbose",
 		"debug",
-		"silly"
+		"silly",
+		"silent"
 	];
 
 	/**

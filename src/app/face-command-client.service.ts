@@ -3,8 +3,8 @@ import { EventEmitter2 } from 'eventemitter2';
 import { MatSnackBar } from '@angular/material';
 import { arrayBufferToBlob, blobToDataURL } from 'blob-util'
 import { AppResources, CommandService, DetectionService, FaceManagementService, ConfigService, LogsService } from "face-command-client";
-import { Face } from 'face-command-common';
-import { MsgPackSerializer, WebSocketClientTransport, Client as RPCClient } from "multi-rpc-browser";
+import { Face, LogEntry } from 'face-command-common';
+import { MsgPackSerializer, WebSocketClientTransport, Client as RPCClient, Transport } from "multi-rpc-browser";
 import { AppErrorHandler } from './app-error-handler';
 
 @Injectable({
@@ -40,6 +40,21 @@ export class FaceCommandClientService extends EventEmitter2 {
     return this.resources.rpcClient;
   }
 
+  public get transport(): Transport {
+    return this.rpcClient.transport;
+  }
+
+  public logEntriesToDisplay: string[] = [
+    "warn",
+    "error",
+    "info"
+  ];
+
+  public logMessages(entry: LogEntry) {
+    if (this.logEntriesToDisplay.some((level) => level === entry.level))
+      this.snackbar.open(entry.message, "Dismiss", { duration: 2000 });
+  }
+
   public async connect() {
     const transport = new WebSocketClientTransport(new MsgPackSerializer(), this.rpcUrl);
     this.resources = new AppResources(transport);
@@ -60,6 +75,8 @@ export class FaceCommandClientService extends EventEmitter2 {
     transport.on("reconnected", () => {
       this.snackbar.open("Connection re-established", "Dismiss", { duration: 2000 });
     });
+
+    this.logsService.on("LogEntry", this.logMessages.bind(this));
 
     await this.resources.rpcClient.connect();
   }
