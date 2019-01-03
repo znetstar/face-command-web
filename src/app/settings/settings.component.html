@@ -49,6 +49,11 @@
 			<mat-form-field class="eigenFaceRecognizerThreshold">
 				<input matInput type="number" placeholder="Eigen Face Recognizer Threshold" name="eigenFaceRecognizerThreshold" [(ngModel)]="config.eigenFaceRecognizerOptions.threshold">
 			</mat-form-field>
+			<br/>
+			<mat-form-field class="minimumBrightness">
+				<input matInput type="number" min="0" max="1" step="0.01" placeholder="Minimum brightness " name="minimumBrightness" [(ngModel)]="config.minimumBrightness">
+			</mat-form-field>
+			<br/>
 		</fieldset>
 		<fieldset>
 			<h2>Database</h2>

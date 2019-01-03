@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.1.0] - 2019-01-03
+### Added
+- Adds a config property for adjusting the minimum brightness.
+
 ## [1.0.2] - 2019-01-03
 ### Added
 - Displays important log messages.
