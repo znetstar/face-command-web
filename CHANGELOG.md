@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.1.3] - 2019-01-04
+### Changed
+- Updates face-command-client.
+
+## [1.1.1] - 2019-01-04
+### Changes
+- Fixes issue #1, duplicate log entries on the log page.
+- Detection page now only displays the latest status.
+
 ## [1.1.0] - 2019-01-03
 ### Added
 - Adds a config property for adjusting the minimum brightness.

@@ -3,9 +3,13 @@
 	<div class="pane" *ngIf="isDetectionRunning === true">
 		<p>Detection is running</p>
 		<button mat-raised-button (click)="stopDetection()">Stop Detection</button>
-		<mat-list role="list">
-			<mat-list-item *ngFor="let status of statusChanges | slice:0:20" role="listitem">{{ status.toString() }}</mat-list-item>
-		</mat-list>
+		<div *ngIf="lastStatus">
+			<br/>
+			<div><b>Last status:</b></div>
+			<div>{{ lastStatus.toString() }}</div>
+			<div><b>Current brightness:</b></div>
+			<div>{{ formatStatusBrightness(lastStatus) }}%</div>
+		</div>
 	</div>
 	<div class="pane" *ngIf="isDetectionRunning === false">
 		<p>Detection is not running</p>

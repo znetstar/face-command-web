@@ -10,13 +10,13 @@ import {
 } from "@angular/material";
 
 import Random from "face-command-common/lib/Random";
+import { DetectionOptions, EigenFaceRecognizerOptions, Status } from 'face-command-common';
 import { assert } from "chai";
 import * as Chance from "chance";
 
 import { DetectionComponent } from './detection.component';
 import { AddFacesComponent } from "../add-faces/add-faces.component";
 import { FaceCommandClientService } from '../face-command-client.service';
-import { DetectionOptions, EigenFaceRecognizerOptions } from 'face-command-common';
 
 const chance = Chance()
 const random = new Random();
@@ -86,26 +86,26 @@ describe('DetectionComponent', () => {
 
   describe("#stopDetection()", () => {
     it("should call stop detection on the server", async () => {
-      component.statusChanges = random.statuses();
+      component.lastStatus = random.status();
       (<FaceCommandClientService>(<any>component).client).detectionService.StopDetection = async () => {
 
       };
       
       await component.stopDetection();
-      assert.isEmpty(component.statusChanges)
+      assert.isNotOk(component.lastStatus)
     });
   });
 
   describe("#startDetection()", () => {
     it("should call start detection on the server", async () => {
       const opts = random.detectionOptions();
-      component.statusChanges = random.statuses();
+      component.lastStatus = random.status();
       (<FaceCommandClientService>(<any>component).client).detectionService.StartDetection = async (options: DetectionOptions) => {
         assert.deepEqual(opts, options);
       }; 
       component.detectionOptions = opts;
       await component.startDetection();
-      assert.isEmpty(component.statusChanges);
+      assert.isNotOk(component.lastStatus);
     });
   });
 
@@ -113,9 +113,19 @@ describe('DetectionComponent', () => {
     it("isDetection running should set with the value from the server", async () => {
       (<FaceCommandClientService>(<any>component).client).configService.GetConfigValue = async () => null;
       const value = chance.bool();
-      (<FaceCommandClientService>(<any>component).client).detectionService.IsDetectionRunning = async (): Promise<boolean> => value
+      (<FaceCommandClientService>(<any>component).client).detectionService.GetLastStatus = async (): Promise<Status> => random.status();
+      (<FaceCommandClientService>(<any>component).client).detectionService.IsDetectionRunning = async (): Promise<boolean> => value;
       await component.ngOnInit();
       assert.equal(value, component.isDetectionRunning );
+    });
+
+    it("lastStatus running should set with the value from the server", async () => {
+      (<FaceCommandClientService>(<any>component).client).configService.GetConfigValue = async () => null;
+      const value = random.status();
+      (<FaceCommandClientService>(<any>component).client).detectionService.GetLastStatus = async (): Promise<Status> => value;
+      (<FaceCommandClientService>(<any>component).client).detectionService.IsDetectionRunning = async (): Promise<boolean> => chance.bool();
+      await component.ngOnInit();
+      assert.equal(value, component.lastStatus);
     });
 
     it("should retrieve the detection options", async () => {
@@ -127,23 +137,27 @@ describe('DetectionComponent', () => {
         [ "imageCaptureFrequency", options.frequency ]
       ]);
       (<FaceCommandClientService>(<any>component).client).configService.GetConfigValue = async (key: string) => config.get(key);
-      (<FaceCommandClientService>(<any>component).client).detectionService.IsDetectionRunning = async (): Promise<boolean> => chance.bool()
+      (<FaceCommandClientService>(<any>component).client).detectionService.GetLastStatus = async (): Promise<Status> => random.status();
+      (<FaceCommandClientService>(<any>component).client).detectionService.IsDetectionRunning = async (): Promise<boolean> => chance.bool();
       await component.ngOnInit();
       assert.deepEqual(component.detectionOptions, options);
     });
 
     it("should add status changes to the component", async () => {
       (<FaceCommandClientService>(<any>component).client).configService.GetConfigValue = async (key: string) => chance.string();
+      (<FaceCommandClientService>(<any>component).client).detectionService.GetLastStatus = async (): Promise<Status> => random.status();
       (<FaceCommandClientService>(<any>component).client).detectionService.IsDetectionRunning = async (): Promise<boolean> => chance.bool();
+
       const status = random.status();
       await component.ngOnInit();
       (<FaceCommandClientService>(<any>component).client).detectionService.emit("StatusChange", status);
-      assert.isNotEmpty(component.statusChanges);
-      assert.includeDeepOrderedMembers(component.statusChanges, [ status ]);
+      assert.isNotEmpty(component.lastStatus);
+      assert.deepEqual(component.lastStatus, status);
     });
 
     it("should update DetectionRunning", async () => {
       (<FaceCommandClientService>(<any>component).client).configService.GetConfigValue = async (key: string) => chance.string();
+      (<FaceCommandClientService>(<any>component).client).detectionService.GetLastStatus = async (): Promise<Status> => random.status();
       (<FaceCommandClientService>(<any>component).client).detectionService.IsDetectionRunning = async (): Promise<boolean> => chance.bool();
       await component.ngOnInit();
       const value = chance.bool();
