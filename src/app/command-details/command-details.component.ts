@@ -131,14 +131,9 @@ export class CommandDetailsComponent implements OnInit {
    * Formats the run conditions and additonal command data. 
    */
   getDataAndRunConditions() {
-    const runConditions = this.command.runConditions.map((r) => {
-      const { runConditionType, id } = r;
-  		const facesToRecognize = (r.facesToRecognize && (r.facesToRecognize.length > 0 ? (r.facesToRecognize.map((f) => f.id)) : null)) || null;
-  		return { runConditionType, id, facesToRecognize };
-  	});	
   	const data = this.command.data ? JSON.parse(this.command.data) : null;
-
-  	return { runConditions, data };
+    
+  	return { data };
   }
 
   /**
@@ -160,9 +155,9 @@ export class CommandDetailsComponent implements OnInit {
   	if (!form.checkValidity() || !this.command.runConditions.length) 
   		return;
 
-  	let { data, runConditions } = this.getDataAndRunConditions();
+  	let { data } = this.getDataAndRunConditions();
 	  
-    const command = await this.client.commandService.AddCommand(this.command.type, runConditions, this.command.name, data);
+    const command = await this.client.commandService.AddCommand(this.command.type, this.command.runConditions, this.command.name, data);
     this._updateCommand(command);
     this.created.emit(this.command);
   }
@@ -176,8 +171,8 @@ export class CommandDetailsComponent implements OnInit {
   	if (!form.checkValidity() || !this.command.runConditions.length) 
   		return;
 
-    const { data, runConditions } = this.getDataAndRunConditions();
-    const { id, name, type } = this.command;
+    const { data } = this.getDataAndRunConditions();
+    const { id, name, type, runConditions } = this.command;
     const command = {
     	data,
     	runConditions,

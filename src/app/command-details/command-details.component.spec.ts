@@ -174,12 +174,6 @@ describe('CommandDetailsComponent', () => {
 
       const formattedData = component.getDataAndRunConditions();
       assert.deepEqual(data, formattedData.data);
-  
-      assert.deepEqual(command.runConditions.map((condition) => {
-        condition.facesToRecognize = <any>condition.facesToRecognize.map((f) => f.id);
-        delete condition.commandId;
-        return cloneDeep(condition);
-      }), formattedData.runConditions);
     });
   });
   

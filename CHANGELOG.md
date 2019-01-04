@@ -1,8 +1,8 @@
 # Changelog
 
-## [1.1.3] - 2019-01-04
+## [1.1.4] - 2019-01-04
 ### Changed
-- Updates face-command-client.
+- Fixes an issue with creating commands.
 
 ## [1.1.1] - 2019-01-04
 ### Changes

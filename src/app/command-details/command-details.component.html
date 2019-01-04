@@ -10,7 +10,7 @@
 	</fieldset>
 	<fieldset>
 		<mat-form-field>
-			<mat-select placeholder="Command Type" name="type" required="" [(ngModel)]="command.type">
+			<mat-select placeholder="Command Type" name="type" required="" [(value)]="commandTypes" [(ngModel)]="command.type">
 				<mat-option *ngFor="let commandType of commandTypes" [value]="commandType">{{commandType}}</mat-option>
 			</mat-select>
 		</mat-form-field>
