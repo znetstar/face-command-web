@@ -86,26 +86,26 @@ describe('DetectionComponent', () => {
 
   describe("#stopDetection()", () => {
     it("should call stop detection on the server", async () => {
-      component.statusChanges = random.statuses();
+      component.lastStatus = random.status();
       (<FaceCommandClientService>(<any>component).client).detectionService.StopDetection = async () => {
 
       };
       
       await component.stopDetection();
-      assert.isEmpty(component.statusChanges)
+      assert.isNotOk(component.lastStatus)
     });
   });
 
   describe("#startDetection()", () => {
     it("should call start detection on the server", async () => {
       const opts = random.detectionOptions();
-      component.statusChanges = random.statuses();
+      component.lastStatus = random.status();
       (<FaceCommandClientService>(<any>component).client).detectionService.StartDetection = async (options: DetectionOptions) => {
         assert.deepEqual(opts, options);
       }; 
       component.detectionOptions = opts;
       await component.startDetection();
-      assert.isEmpty(component.statusChanges);
+      assert.isNotOk(component.lastStatus);
     });
   });
 
@@ -138,8 +138,8 @@ describe('DetectionComponent', () => {
       const status = random.status();
       await component.ngOnInit();
       (<FaceCommandClientService>(<any>component).client).detectionService.emit("StatusChange", status);
-      assert.isNotEmpty(component.statusChanges);
-      assert.includeDeepOrderedMembers(component.statusChanges, [ status ]);
+      assert.isNotEmpty(component.lastStatus);
+      assert.deepEqual(component.lastStatus, status);
     });
 
     it("should update DetectionRunning", async () => {

@@ -49,21 +49,21 @@ export class DetectionComponent implements OnInit {
   /**
    * Status changes that have occured since detection started.
    */
-  public statusChanges: Status[] = [];
+  public lastStatus: Status;
   
   /**
    * Stops the detection session.
    */
   async stopDetection() {
     await this.client.detectionService.StopDetection();
-    this.statusChanges = [];
+    this.lastStatus = null;
   }
 
   /**
    * Attempts to start the detection session.
    */
   async startDetection() {
-    this.statusChanges = [];
+    this.lastStatus = null;
     await this.client.detectionService.StartDetection(this.detectionOptions);
   }
 
@@ -77,7 +77,7 @@ export class DetectionComponent implements OnInit {
     this.detectionOptions = new DetectionOptions((await this.client.configService.GetConfigValue("imageCaptureFrequency")), recOptions);
     
     this.client.detectionService.on("StatusChange", (status: Status) => {
-      this.statusChanges.unshift(status);
+      this.lastStatus = status;
     });
 
     this.client.detectionService.on("DetectionRunning", (running: boolean) => {
