@@ -38,10 +38,13 @@
 				<input matInput type="number" min="1" placeholder="Image capture frequency (ms)" name="ImageCaptureFrequency" [(ngModel)]="config.imageCaptureFrequency">
 			</mat-form-field>
 			<br/>
-			<!-- <mat-form-field class="cascade">
-				<input matInput type="text" placeholder="Face Cascade file" name="FaceCascade" [(ngModel)]="config.FaceCascade">
-			</mat-form-field>
-			<br/> -->
+			<div>
+				<mat-form-field class="classifier">
+					<mat-select class="classifierSelector" [(ngModel)]="config.cascadeClassifier" [(value)]="config.cascadeClassifier" name="cascadeClassifier" placeholder="Cascade Classifier">
+						<mat-option *ngFor="let classifier of classifiers" [value]="classifier">{{classifier}}</mat-option>
+					</mat-select>
+				</mat-form-field>
+			</div>
 			<mat-form-field class="eigenFaceRecognizerComponents">
 				<input matInput type="number" placeholder="Eigen Face Recognizer Components" name="eigenFaceRecognizerComponents" [(ngModel)]="config.eigenFaceRecognizerOptions.components">
 			</mat-form-field>
@@ -81,7 +84,7 @@
 				<mat-checkbox [(ngModel)]="config.quiet" name="quiet">Disable Logging</mat-checkbox>
 			</div>			
 			<mat-form-field class="loglevel">
-				<mat-select class="logLevelSelector" [(ngModel)]="config.logLevel" name="logLevel" [disabled]="config.quiet">
+				<mat-select class="logLevelSelector" [(ngModel)]="config.logLevel" [(value)]="config.logLevel" name="logLevel" [disabled]="config.quiet">
 					<mat-option *ngFor="let level of logLevels" [value]="level">{{level}}</mat-option>
 				</mat-select>
 			</mat-form-field>

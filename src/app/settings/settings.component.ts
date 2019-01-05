@@ -32,6 +32,8 @@ export class SettingsComponent implements OnInit {
 		"silent"
 	];
 
+	public classifiers: string[] = [];
+
 	/**
 	 * URL to RPC endpoint.
 	 */
@@ -96,5 +98,6 @@ export class SettingsComponent implements OnInit {
 	 */
 	async ngOnInit() {
 		await this.loadSettings();
+		this.classifiers = this.config.cascadeClassifiers.map((c) => c.key);
 	}
 }

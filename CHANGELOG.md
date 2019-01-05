@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.2.0] - 2019-01-05
+### Added
+- Cascade classifier can now be changed via settings component.
+
 ## [1.1.4] - 2019-01-04
 ### Changed
 - Fixes an issue with creating commands.
