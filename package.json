@@ -1,6 +1,6 @@
 {
   "name": "face-command-web",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "license": "AGPL-3.0-only",
   "description": "Angular Web Interface for Face Command",
   "scripts": {
