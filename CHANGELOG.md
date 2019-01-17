@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.3.0] - 2019-01-16
+## [1.3.1] - 2019-01-16
 ### Added
 - Allows for connecting to the server via Electron IPC.
 

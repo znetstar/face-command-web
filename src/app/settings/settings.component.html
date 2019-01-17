@@ -64,7 +64,7 @@
 				<input matInput placeholder="Database connection url" name="DatabaseUrl" [(ngModel)]="config.databaseUrl">
 			</mat-form-field>
 		</fieldset>
-		<fieldset>
+		<fieldset *ngIf="!client.usingElectron">
 			<h2>RPC</h2>
 			<mat-form-field class="host">
 				<input matInput placeholder="IP Address Server binds to" name="Host" [(ngModel)]="config.host">
