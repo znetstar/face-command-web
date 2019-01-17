@@ -1,9 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, ErrorHandler } from '@angular/core';
+import { NgModule, ErrorHandler, enableProdMode } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { APP_BASE_HREF } from '@angular/common';
 import { LayoutModule } from '@angular/cdk/layout';
 import { MatToolbarModule, 
           MatButtonModule,
@@ -34,6 +35,12 @@ import { AddCommandComponent } from './add-command/add-command.component';
 import { CommandListItemComponent } from './command-list-item/command-list-item.component';
 import { LogsComponent } from './logs/logs.component';
 import { FaceCommandClientService } from './face-command-client.service';
+
+const hrefValue = localStorage["baseHref"] ? localStorage["baseHref"] : '/';
+const baseHref = { provide: APP_BASE_HREF, useValue : hrefValue };
+
+if (!localStorage["devMode"])
+  enableProdMode();
 
 @NgModule({
   declarations: [
@@ -73,7 +80,11 @@ import { FaceCommandClientService } from './face-command-client.service';
     MatGridListModule,
     MatSnackBarModule
   ],
-  providers: [ {provide: ErrorHandler, useClass: AppErrorHandler }, FaceCommandClientService],
-  bootstrap: [AppComponent]
+  providers: [ {
+     provide: ErrorHandler, useClass: AppErrorHandler }, 
+     FaceCommandClientService,
+     baseHref
+  ],
+  bootstrap: [ AppComponent ]
 })
 export class AppModule { }

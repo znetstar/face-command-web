@@ -11,11 +11,11 @@ import { AddCommandComponent } from './add-command/add-command.component';
 import { LogsComponent } from "./logs/logs.component";
 
 const routes: Routes = [
+	{ path: '', component: DetectionComponent },
 	{ path: 'faces', component: FaceListComponent },
 	{ path: 'faces/:id', component: FaceListItemComponent },
 	{ path: 'settings', component: SettingsComponent },
 	{ path: 'detection', component: DetectionComponent },
-	{ path: '', component: DetectionComponent },
 	{ path: 'add-face', component: AddFaceComponent },
 	{ path: 'commands', component: CommandListComponent },
 	{ path: 'add-command', component: AddCommandComponent },
@@ -24,7 +24,11 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [
+	  RouterModule.forRoot(routes, {
+		  useHash: Boolean(localStorage["useHash"])
+	  })
+	],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

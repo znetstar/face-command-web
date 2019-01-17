@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.3.0] - 2019-01-16
+### Added
+- Allows for connecting to the server via Electron IPC.
+
 ## [1.2.1] - 2019-01-07
 ### Changes
 - Fixes issue with command details causing stack overflow.

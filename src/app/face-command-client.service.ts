@@ -4,7 +4,8 @@ import { MatSnackBar } from '@angular/material';
 import { arrayBufferToBlob, blobToDataURL } from 'blob-util'
 import { AppResources, CommandService, DetectionService, FaceManagementService, ConfigService, LogsService } from "face-command-client";
 import { Face, LogEntry } from 'face-command-common';
-import { MsgPackSerializer, WebSocketClientTransport, Client as RPCClient, Transport } from "multi-rpc-browser";
+import { MsgPackSerializer, WebSocketClientTransport, Client as RPCClient, Transport, PersistentTransport } from "multi-rpc-browser";
+import { ElectronTransport } from "multi-rpc-electron-transport";
 import { AppErrorHandler } from './app-error-handler';
 
 @Injectable({
@@ -55,9 +56,22 @@ export class FaceCommandClientService extends EventEmitter2 {
       this.snackbar.open(entry.message, "Dismiss", { duration: 2000 });
   }
 
+  public get usingElectron(): Boolean { return Boolean(localStorage["electronChannel"]); }
+
   public async connect() {
-    const transport = new WebSocketClientTransport(new MsgPackSerializer(), this.rpcUrl);
+    const electronChannel = localStorage["electronChannel"];
+    const serializer = new MsgPackSerializer();
+    let transport: PersistentTransport;
+
+    if (electronChannel) {
+      transport = new ElectronTransport(serializer, electronChannel, eval(`window.nodeRequire("electron");`));
+    }
+    else {
+      transport = new WebSocketClientTransport(serializer, this.rpcUrl);
+    }
+
     this.resources = new AppResources(transport);
+  
     this.commandService = new CommandService(this.resources);
     this.detectionService = new DetectionService(this.resources);
     this.faceManagementService = new FaceManagementService(this.resources);

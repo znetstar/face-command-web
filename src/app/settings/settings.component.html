@@ -6,7 +6,7 @@
 	<form class="settings">
 		<fieldset>
 			<h2>RPC Client</h2>
-			<div>
+			<div *ngIf="!client.usingElectron">
 				<mat-form-field class="rpcUrl">
 					<input matInput type="text" placeholder="WebSocket URL to RPC Server" name="RPCUrl" [(ngModel)]="rpcUrl">
 				</mat-form-field>
@@ -97,7 +97,7 @@
 				<input type="text" matInput placeholder="Log to File" name="LogToFile" [(ngModel)]="config.LogToFile">
 			</mat-form-field> -->
 		</fieldset>
-		<fieldset>
+		<fieldset *ngIf="!client.usingElectron">
 			<h2>Interface</h2>
 			<br/>
 			<div>

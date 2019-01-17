@@ -31,6 +31,7 @@ export class SettingsComponent implements OnInit {
 		"silly",
 		"silent"
 	];
+	
 
 	public classifiers: string[] = [];
 
