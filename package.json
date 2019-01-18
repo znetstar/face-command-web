@@ -11,7 +11,7 @@
     "headless-test": "ng test --no-watch --no-progress --browsers=ChromeHeadlessCI",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "prepublish": "npm run build"
+    "prepublishOnly": "npm run build"
   },
   "files": [
     "dist",
