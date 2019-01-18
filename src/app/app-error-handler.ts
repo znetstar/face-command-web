@@ -1,6 +1,6 @@
 import { MatSnackBar } from '@angular/material';
 import { ErrorHandler, Injectable, Injector, NgZone  } from '@angular/core';
-import { ServerError } from "multi-rpc-browser";
+import { ServerError } from "multi-rpc-common";
 
 @Injectable({
   providedIn: 'root'

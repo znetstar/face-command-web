@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.3.2] - 2019-01-18
+### Changes
+- Seperates multi-rpc in to different packages.
+
 ## [1.3.1] - 2019-01-16
 ### Added
 - Allows for connecting to the server via Electron IPC.

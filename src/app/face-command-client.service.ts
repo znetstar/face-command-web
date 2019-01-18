@@ -4,7 +4,10 @@ import { MatSnackBar } from '@angular/material';
 import { arrayBufferToBlob, blobToDataURL } from 'blob-util'
 import { AppResources, CommandService, DetectionService, FaceManagementService, ConfigService, LogsService } from "face-command-client";
 import { Face, LogEntry } from 'face-command-common';
-import { MsgPackSerializer, WebSocketClientTransport, Client as RPCClient, Transport, PersistentTransport } from "multi-rpc-browser";
+import { Transport, PersistentTransport } from "multi-rpc-common";
+import { Client as RPCClient } from "multi-rpc-core";
+import { MsgPackSerializer } from "multi-rpc-msgpack-serializer";
+import { WebSocketClientTransport } from "multi-rpc-websocket-client-side-transport";
 import { ElectronTransport } from "multi-rpc-electron-transport";
 import { AppErrorHandler } from './app-error-handler';
 
