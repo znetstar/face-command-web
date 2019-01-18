@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.3.3] - 2019-01-18
+### Changes
+- Fixes a bug which zone.js.
+
 ## [1.3.2] - 2019-01-18
 ### Changes
 - Seperates multi-rpc in to different packages.

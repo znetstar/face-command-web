@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { LogEntry } from "face-command-common";
-import { uniq } from "lodash";
 import { FaceCommandClientService } from "../face-command-client.service";
 
 /**
@@ -18,7 +17,7 @@ export class LogsComponent implements OnInit {
    */
   public entries: LogEntry[] = [];
   
-  constructor(private client: FaceCommandClientService) { 
+  constructor(private client: FaceCommandClientService, private zone: NgZone) { 
   }
 
   onLogEntry(entry: LogEntry) {
@@ -38,8 +37,9 @@ export class LogsComponent implements OnInit {
       if (equal)
         break;
     }
-    if (!equal)
-      this.entries.push(entry);
+    if (!equal) {
+      this.zone.run(() => this.entries.push(entry));
+    }
   }
 
   /**

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { EventEmitter2 } from 'eventemitter2';
 import { MatSnackBar } from '@angular/material';
 import { arrayBufferToBlob, blobToDataURL } from 'blob-util'
@@ -23,7 +23,7 @@ export class FaceCommandClientService extends EventEmitter2 {
   public configService: ConfigService;
   public logsService: LogsService;
 
-  constructor(private errors: AppErrorHandler, private snackbar: MatSnackBar) {
+  constructor(private errors: AppErrorHandler, private snackbar: MatSnackBar, private zone: NgZone) {
     super();
     this.connect();
   }
@@ -56,7 +56,7 @@ export class FaceCommandClientService extends EventEmitter2 {
 
   public logMessages(entry: LogEntry) {
     if (this.logEntriesToDisplay.some((level) => level === entry.level))
-      this.snackbar.open(entry.message, "Dismiss", { duration: 2000 });
+      this.zone.run(() => this.snackbar.open(entry.message, "Dismiss", { duration: 2000 }));;
   }
 
   public get usingElectron(): Boolean { return Boolean(localStorage["electronChannel"]); }
@@ -90,7 +90,7 @@ export class FaceCommandClientService extends EventEmitter2 {
     });
 
     transport.on("reconnected", () => {
-      this.snackbar.open("Connection re-established", "Dismiss", { duration: 2000 });
+      this.zone.run(() => this.snackbar.open("Connection re-established", "Dismiss", { duration: 2000 }));
     });
 
     this.logsService.on("LogEntry", this.logMessages.bind(this));
